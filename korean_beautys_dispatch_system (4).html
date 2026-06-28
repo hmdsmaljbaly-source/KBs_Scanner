@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korean Beautys - نظام الشحن السحابي المتزامن</title>
+    <!-- Tailwind CSS للتصميم العصري والسريع -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- مكتبة أيقونات Lucide الرائعة بروابط مباشرة ومستقرة لمنع أخطاء CORS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.0/lucide.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- مكتبة قراءة الباركود عبر المتصفح - إصدار مثبت ومستقر -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- مكتبة SheetJS لقراءة وتحليل ملفات الـ Excel والـ CSV سحابياً -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- مكتبات توليد الـ PDF بجودة عالية ودعم كامل للعربية -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- font-awesome للرموز والأيقونات الإضافية -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <!-- خطوط جوجل - خط تجول الأنيق -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- روابط مكتبات Firebase CDN المتوافقة (Compat / v9) المطلوبة للتكامل السريع مع تفعيل الـ CORS بأمان -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* تصميم مخصص لمربع تحديد الباركود */
+        #reader__scan_region {
+            border: none !important;
+        }
+        /* كلاسات التأثيرات الشفافة فوق الكاميرا */
+        .overlay-active {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800">
+
+    <!-- شريط التنقل العلوي والمؤشرات السحابية (Premium Branding & Cloud Status) -->
+    <header class="bg-gradient-to-r from-rose-700 via-rose-600 to-amber-600 text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-white/10 p-2 rounded-full backdrop-blur-sm">
+                    <span class="text-2xl">✨</span>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-wide">KOREAN BEAUTYS</h1>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" id="cloud-pulse"></span>
+                        <p class="text-xs text-rose-100 font-medium" id="cloud-status-text">جاري الاتصال بالسحابة المشتركة...</p>
+                    </div>
+                </div>
+            </div>
+            <!-- تبويبات التنقل الرئيسية -->
+            <nav class="flex items-center gap-1 bg-black/10 p-1 rounded-xl backdrop-blur-sm w-full sm:w-auto overflow-x-auto">
+                <button onclick="switchTab('upload')" id="tab-upload" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200 bg-white text-rose-700 shadow-sm">
+                    <i data-lucide="upload-cloud" class="w-4 h-4"></i> الرفع واللوحة
+                </button>
+                <button onclick="switchTab('scanner')" id="tab-scanner" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200 text-white hover:bg-white/10">
+                    <i data-lucide="scan-barcode" class="w-4 h-4"></i> محطة الموبايل
+                </button>
+                <button onclick="switchTab('reports')" id="tab-reports" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200 text-white hover:bg-white/10">
+                    <i data-lucide="file-text" class="w-4 h-4"></i> التقرير والإغلاق
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- شريط معلومات الموظف النشط سحابياً (User Identity Banner) -->
+    <div class="bg-slate-100 border-b border-slate-200 px-4 py-2">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center text-xs gap-3">
+            <span class="text-slate-600 flex items-center gap-2 font-medium">
+                <i data-lucide="user-check" class="w-4 h-4 text-rose-600"></i>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-slate-500">اسم الموظف النشط:</span>
+                    <input type="text" id="worker-name-input" onchange="saveWorkerName(this.value)" class="bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-rose-700 font-extrabold focus:outline-none focus:ring-2 focus:ring-rose-500 w-36 transition-all" placeholder="اكتب اسمك هنا...">
+                </div>
+            </span>
+            <span class="text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                قناة التحديث اللحظي السريع نشطة
+            </span>
+        </div>
+    </div>
+
+    <!-- محتوى التطبيق الرئيسي -->
+    <main class="flex-grow max-w-6xl w-full mx-auto p-4">
+
+        <!-- ================= تبويب الرفع واللوحة ================= -->
+        <section id="section-upload" class="space-y-6">
+            <!-- كروت العدادات اللحظية (Summary Cards) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+                    <div>
+                        <p class="text-slate-400 text-sm font-medium">إجمالي أوردرات اليوم</p>
+                        <h3 id="stat-total" class="text-3xl font-extrabold text-slate-800 mt-1">0</h3>
+                    </div>
+                    <div class="bg-blue-50 text-blue-600 p-4 rounded-xl">
+                        <i data-lucide="boxes" class="w-8 h-8"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+                    <div>
+                        <p class="text-slate-400 text-sm font-medium">تم شحنها (إسكان ناجح)</p>
+                        <h3 id="stat-shipped" class="text-3xl font-extrabold text-emerald-600 mt-1">0</h3>
+                    </div>
+                    <div class="bg-emerald-50 text-emerald-600 p-4 rounded-xl">
+                        <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+                    <div>
+                        <p class="text-slate-400 text-sm font-medium">متبقي قيد الانتظار</p>
+                        <h3 id="stat-pending" class="text-3xl font-extrabold text-amber-500 mt-1">0</h3>
+                    </div>
+                    <div class="bg-amber-50 text-amber-500 p-4 rounded-xl">
+                        <i data-lucide="clock" class="w-8 h-8"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- شاشة الرفع والتهيئة السحابية -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-1 flex flex-col justify-between space-y-4">
+                    <div>
+                        <h2 class="text-lg font-extrabold text-slate-800 flex items-center gap-2 mb-3">
+                            <i data-lucide="file-up" class="text-rose-600"></i> رفع شيت الأوردرات المشترك
+                        </h2>
+                        <p class="text-slate-500 text-sm mb-4 leading-relaxed">
+                            قم برفع شيت اليوم بصيغة **Excel (.xlsx, .xls)** أو **CSV**. سيقوم النظام السحابي بالتعرف التلقائي على الأعمدة ومشاركتها مع جميع العمال فوراً.
+                        </p>
+
+                        <!-- منطقة الرفع بالتفاعل السحب والإفلات -->
+                        <div id="drop-zone" class="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:border-rose-500 transition-colors cursor-pointer bg-slate-50 relative">
+                            <input type="file" id="csv-file" accept=".csv, .xlsx, .xls, .txt" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="handleFileSelect(event)">
+                            <div class="space-y-2">
+                                <div class="bg-white shadow-sm p-3 inline-block rounded-full text-rose-600 mx-auto">
+                                    <i data-lucide="upload" class="w-6 h-6"></i>
+                                </div>
+                                <p class="text-sm font-bold text-slate-700">اسحب الملف هنا أو تصفحه</p>
+                                <p class="text-xs text-slate-400">يدعم ملفات Excel (.xlsx) و CSV المنسقة</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 space-y-2">
+                        <!-- تصفير السحابة الحالية لبدء يوم جديد -->
+                        <button onclick="clearAllOrders()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 transition-all duration-150">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4 text-rose-400"></i> تصفير ومسح السحابة لليوم الجديد
+                        </button>
+                        <p class="text-[11px] text-slate-400 text-center">يقوم بمسح الأوردرات من السحابة لدى جميع الأجهزة فوراً.</p>
+                    </div>
+                </div>
+
+                <!-- جدول عرض وتفتيش أوردرات اليوم اللحظي -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-2">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+                        <div>
+                            <h2 class="text-lg font-extrabold text-slate-800 flex items-center gap-2">
+                                <i data-lucide="table-properties" class="text-rose-600"></i> الأوردرات المرفوعة على السحابة
+                            </h2>
+                            <p class="text-slate-400 text-xs mt-0.5">تحديث فوري لجميع الأوردرات المقروءة والمعلقة من جميع الهواتف</p>
+                        </div>
+                        <!-- خانة البحث السريع داخل الجدول -->
+                        <div class="relative w-full sm:w-64">
+                            <input type="text" id="search-input" oninput="filterTable()" placeholder="ابحث برقم الأوردر أو التتبع..." class="w-full pl-3 pr-10 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
+                            <i data-lucide="search" class="absolute left-auto right-3 top-2.5 w-4 h-4 text-slate-400"></i>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto border border-slate-100 rounded-xl max-h-[300px] overflow-y-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead class="bg-slate-50 text-slate-500 sticky top-0 shadow-sm z-10">
+                                <tr>
+                                    <th class="p-3 font-bold">رقم الأوردر (Order_ID)</th>
+                                    <th class="p-3 font-bold">رقم تتبع الشحن (Tracking)</th>
+                                    <th class="p-3 font-bold">الحالة</th>
+                                    <th class="p-3 font-bold">المسؤول عن الإسكان</th>
+                                    <th class="p-3 font-bold">توقيت الإسكان</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-body" class="divide-y divide-slate-100">
+                                <tr>
+                                    <td colspan="5" class="p-8 text-center text-slate-400">
+                                        <div class="flex flex-col items-center justify-center gap-2">
+                                            <i data-lucide="cloud-off" class="w-8 h-8 opacity-60"></i>
+                                            <span>في انتظار الرفع السحابي لليوم.. قم بسحب الشيت في اليمين للبدء.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= تبويب محطة الموبايل والكاميرا ================= -->
+        <section id="section-scanner" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- عمود كاميرا الموبايل المستمرة -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden">
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h2 class="text-lg font-extrabold text-slate-800 flex items-center gap-2">
+                                    <i data-lucide="camera" class="text-rose-600"></i> كاميرا الإسكان المشترك
+                                </h2>
+                                <p class="text-slate-400 text-xs">سجل عملياتك مع زملائك في المستودع بالتوازي</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <!-- زر تفعيل الفلاش -->
+                                <button onclick="toggleTorch()" id="torch-btn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 p-2.5 rounded-xl transition-all duration-150 relative group" title="تشغيل الكشاف">
+                                    <i data-lucide="flashlight" class="w-5 h-5"></i>
+                                </button>
+                                <!-- اختيار الكاميرا المناسبة -->
+                                <select id="camera-select" onchange="restartScannerWithSelectedCamera()" class="border border-slate-200 rounded-xl px-3 py-1.5 text-xs bg-slate-50 focus:outline-none">
+                                    <option value="">جاري الكشف عن الكاميرات...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- صندوق قارئ الكاميرا الفعلي محاط بإطار أنيق وتفاعلي للسيناريوهات -->
+                        <div class="relative w-full aspect-video md:aspect-[4/3] rounded-2xl bg-black overflow-hidden border border-slate-200 shadow-inner">
+                            
+                            <!-- عنصر الفيديو الخاص بقارئ الباركود -->
+                            <div id="reader" class="w-full h-full"></div>
+
+                            <!-- الإطار الشفاف الافتراضي (Scanner Target) -->
+                            <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                                <div class="w-64 h-40 border-2 border-dashed border-white/50 rounded-xl flex items-center justify-center bg-black/20 backdrop-blur-[0.5px]">
+                                    <div class="text-[11px] text-white/80 bg-black/60 px-2 py-1 rounded">ضع الباركود هنا</div>
+                                </div>
+                            </div>
+
+                            <!-- عداد الإسكان العائم باللون الأخضر أسفل الفيديو -->
+                            <div class="absolute bottom-4 right-4 left-4 flex justify-between items-center bg-black/70 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10 pointer-events-none">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse animate-duration-1000"></span>
+                                    <span class="text-xs text-white/90">الماسح متزامن سحابياً</span>
+                                </div>
+                                <div class="text-sm text-emerald-400 font-extrabold flex items-center gap-1">
+                                    تم الإسكان: <span id="scanner-count">0</span>
+                                </div>
+                            </div>
+
+                            <!-- 🟢 واجهة الإسكان الناجح (Success Overlay) -->
+                            <div id="overlay-success" class="absolute inset-0 bg-emerald-600/90 text-white flex flex-col items-center justify-center gap-2 opacity-0 pointer-events-none transition-all duration-150 z-20">
+                                <div class="bg-white text-emerald-600 p-4 rounded-full shadow-lg animate-bounce animate-duration-500">
+                                    <i data-lucide="check" class="w-12 h-12"></i>
+                                </div>
+                                <h4 class="text-2xl font-extrabold tracking-wide">أوردر صحيح!</h4>
+                                <p id="overlay-success-id" class="text-sm font-mono text-emerald-100">Order ID: -</p>
+                            </div>
+
+                            <!-- 🟡 واجهة الأوردر المكرر (Duplicate Overlay) -->
+                            <div id="overlay-duplicate" class="absolute inset-0 bg-amber-500/95 text-white flex flex-col items-center justify-center gap-2 opacity-0 pointer-events-none transition-all duration-150 z-20">
+                                <div class="bg-white text-amber-500 p-4 rounded-full shadow-lg">
+                                    <i data-lucide="alert-triangle" class="w-12 h-12"></i>
+                                </div>
+                                <h4 class="text-2xl font-extrabold tracking-wide">تنبيه: تم مسحه مسبقاً!</h4>
+                                <p id="overlay-duplicate-id" class="text-sm font-mono text-amber-500 bg-white/95 px-3 py-1 rounded-lg font-bold">تم إسكانه بالفعل</p>
+                            </div>
+
+                            <!-- 🔴 واجهة الأوردر الخاطئ (Error Block Overlay) -->
+                            <div id="overlay-error" class="absolute inset-0 bg-rose-600 text-white flex flex-col items-center justify-center p-6 gap-4 opacity-0 pointer-events-none transition-all duration-150 z-20">
+                                <div class="bg-white text-rose-600 p-4 rounded-full shadow-lg animate-pulse animate-duration-1000">
+                                    <i data-lucide="x" class="w-12 h-12"></i>
+                                </div>
+                                <div class="text-center space-y-1">
+                                    <h4 class="text-2xl font-extrabold tracking-wide">خطأ! غير مسجل بالسحابة</h4>
+                                    <p class="text-sm text-rose-100">هذا الطرد لا ينتمي لقاعدة البيانات المرفوعة اليوم!</p>
+                                </div>
+                                <!-- زر إجباري لمتابعة الإسكان وإلغاء القفل للأمان -->
+                                <button onclick="resumeScanningAfterError()" class="bg-white hover:bg-slate-50 text-rose-700 font-extrabold py-3.5 px-8 rounded-xl shadow-md text-base transition-all active:scale-95 flex items-center gap-2">
+                                    <i data-lucide="play" class="w-5 h-5"></i> متابعة الإسكان
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mt-4 text-xs text-slate-500">
+                            <span class="flex items-center gap-1"><i data-lucide="info" class="w-4 h-4 text-rose-600"></i> الرجاء منح صلاحية الكاميرا للمتصفح عند الطلب.</span>
+                            <div class="flex gap-2">
+                                <button onclick="startScanning()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-3 rounded-lg flex items-center gap-1 transition-all"><i data-lucide="play" class="w-3.5 h-3.5"></i> تشغيل</button>
+                                <button onclick="stopScanning()" class="bg-slate-500 hover:bg-slate-600 text-white font-bold py-1.5 px-3 rounded-lg flex items-center gap-1 transition-all"><i data-lucide="square" class="w-3.5 h-3.5"></i> إيقاف</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- عمود فحص ومحاكاة الباركود (مثالي لتجربة فورية بدون طباعة باركودات) -->
+                <div class="lg:col-span-1 space-y-4">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-full">
+                        <div>
+                            <h2 class="text-lg font-extrabold text-slate-800 flex items-center gap-2 mb-2">
+                                <i data-lucide="terminal" class="text-rose-600"></i> لوحة الفحص السريع
+                            </h2>
+                            <p class="text-slate-400 text-xs mb-4">اختبر محاكاة الرفع والمسح السحابي المشترك من الأجهزة المختلفة</p>
+
+                            <div class="space-y-4">
+                                <div class="bg-rose-50/50 p-3 rounded-xl border border-rose-100/50 space-y-2">
+                                    <h4 class="text-xs font-extrabold text-rose-700">📌 كيف تجرب العمل الجماعي اللحظي؟</h4>
+                                    <ul class="text-[11px] text-rose-600/90 list-disc list-inside space-y-1 bg-white/40 p-2 rounded-lg">
+                                        <li>ارفع ملف الأوردرات من جهاز الكمبيوتر أو الموبايل الأول.</li>
+                                        <li>افتح نفس الصفحة من هاتف أو متصفح آخر.</li>
+                                        <li>جرب إدخال رقم تتبع (Tracking) مضاف في الشيت لترى التحديث الفوري المتبادل بين الأجهزة في نفس اللحظة!</li>
+                                    </ul>
+                                </div>
+
+                                <!-- حقل إدخال المحاكاة اليدوية -->
+                                <div class="space-y-1.5">
+                                    <label class="text-xs font-bold text-slate-600">أدخل رقم التتبع يدوياً للمحاكاة السحابية:</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="sim-input" placeholder="مثال: TRK-1001" class="flex-grow px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
+                                        <button onclick="simulateScanAction()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-4 rounded-xl text-sm transition-all duration-150">إسكان</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- سجل الإسكان المباشر في الجانب -->
+                        <div class="mt-4 pt-4 border-t border-slate-100">
+                            <h4 class="text-xs font-bold text-slate-600 mb-2">سجل الأحداث الأخيرة للسحابة:</h4>
+                            <div id="live-scan-log" class="text-[11px] font-mono text-slate-500 space-y-1 max-h-[140px] overflow-y-auto bg-slate-50 p-2 rounded-lg border border-slate-100">
+                                <p class="italic text-slate-400 text-center py-2">لا يوجد عمليات إسكان حتى الآن...</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= تبويب التقارير والإغلاق والـ PDF ================= -->
+        <section id="section-reports" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- عمود فحص النواقص والأوردرات المتبقية -->
+                <div class="lg:col-span-1 space-y-4">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-full">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <h2 class="text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                                    <i data-lucide="package-minus" class="text-amber-500"></i> النواقص المتبقية بالمستودع
+                                </h2>
+                                <span id="badge-missing-count" class="bg-rose-100 text-rose-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full">0 طرود متأخرة</span>
+                            </div>
+                            <p class="text-slate-400 text-xs mb-4">هذه القائمة تستعرض الطرود المتبقية التي لم يتم إسكانها من أي موظف حتى الآن</p>
+                            
+                            <!-- قائمة متبقي الأوردرات المعلقة -->
+                            <div id="missing-orders-list" class="space-y-1.5 max-h-[250px] overflow-y-auto">
+                                <div class="text-center text-slate-400 py-6 text-xs">لا يوجد أوردرات معلقة حالياً.</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-slate-100 text-[11px] text-slate-400 leading-relaxed">
+                            تتيح لك هذه اللوحة حصر الطرود المعلقة بالمخزن سريعاً للبحث عنها وضمان سلامة وجودة الشحنة الكاملة قبل إغلاق الوردية والتحميل.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- عمود بيانات الـ Manifest والتقرير لتوليد الـ PDF -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
+                        
+                        <div>
+                            <h2 class="text-lg font-extrabold text-slate-800 flex items-center gap-2">
+                                <i data-lucide="printer" class="text-rose-600"></i> إعداد وطباعة إيصال التسليم الرسمي
+                            </h2>
+                            <p class="text-slate-400 text-xs mt-0.5">أدخل تفاصيل التوقيع لدمجها بمستند الـ PDF الذكي</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="space-y-1.5">
+                                <label class="text-xs font-bold text-slate-700">اسم المندوب المستلم:</label>
+                                <input type="text" id="pdf-courier-name" value="أحمد عبد العزيز" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-xs font-bold text-slate-700">رقم الهوية للمندوب:</label>
+                                <input type="text" id="pdf-courier-id" value="29605121401258" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-xs font-bold text-slate-700">رقم لوحة السيارة:</label>
+                                <input type="text" id="pdf-car-plate" value="أ ب ج 4951" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-start gap-3">
+                            <div class="bg-white text-emerald-600 p-2 rounded-xl shadow-sm">
+                                <i data-lucide="check-square" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-extrabold text-emerald-800">حماية التوقيع المندوب المدمج</h4>
+                                <p class="text-xs text-emerald-600/90 mt-0.5 leading-relaxed">
+                                    سيقوم محرك الـ PDF بالفلترة التلقائية، ولن يحتوي إيصال التسليم للمندوب إلا على الأوردرات التي تم مسحها بنجاح فقط (المشحونة)، لضمان عدم توقيع المندوب على أي طرد لم يتم إسكانه واستلامه فعلياً.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- كبس الزر الرئيسي لتوليد ملف الـ PDF -->
+                        <button onclick="generatePDFReport()" class="w-full bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-700 hover:to-amber-700 text-white font-extrabold py-4 px-6 rounded-2xl text-base flex items-center justify-center gap-2.5 shadow-md shadow-rose-100 transition-all active:scale-98">
+                            <i data-lucide="file-check-2" class="w-5 h-5"></i> تحميل تقرير ومستند التسليم النهائي (PDF)
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- تذييل الصفحة الأنيق لبراند كوريان بيوتيز -->
+    <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400">
+        <div>جميع الحقوق محفوظة © <span class="font-extrabold tracking-wider text-rose-600">KOREAN BEAUTYS</span> ٢٠٢٦</div>
+    </footer>
+
+    <!-- ================= الـ PDF المصمم للطباعة الفائقة (مخفي برمجياً ويستخدم للتوليد) ================= -->
+    <div id="pdf-template-wrapper" class="hidden">
+        <div id="pdf-document" class="p-8 bg-white text-slate-800 w-[794px] min-h-[1123px] text-right text-xs leading-normal relative space-y-8" style="direction: rtl;">
+            
+            <!-- 📄 الصفحة الأولى: تقرير الحالة الداخلي لـ Korean Beautys -->
+            <div class="pdf-page relative min-h-[1050px] flex flex-col justify-between">
+                <div>
+                    <!-- ترويسة الصفحة الأولى الفاخرة -->
+                    <div class="flex justify-between items-center border-b-2 border-rose-600 pb-4">
+                        <div>
+                            <h1 class="text-2xl font-black text-rose-700 tracking-wide">KOREAN BEAUTYS</h1>
+                            <p class="text-[10px] text-slate-500 font-bold mt-1">تقرير جرد الشحنات والوردية الداخلي لليوم</p>
+                        </div>
+                        <div class="text-left text-[10px] text-slate-500 space-y-1">
+                            <p><strong>التاريخ:</strong> <span id="pdf-date">15-12-2026</span></p>
+                            <p><strong>وقت الإغلاق:</strong> <span id="pdf-time">04:30 م</span></p>
+                        </div>
+                    </div>
+
+                    <!-- الملخص العددي للوردية -->
+                    <div class="grid grid-cols-3 gap-4 my-6 text-center">
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <span class="text-slate-500 block text-[9px] font-bold">إجمالي طرود الوردية</span>
+                            <span id="pdf-summary-total" class="text-xl font-extrabold text-slate-800">230</span>
+                        </div>
+                        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                            <span class="text-emerald-600 block text-[9px] font-bold">تم شحنها بنجاح</span>
+                            <span id="pdf-summary-shipped" class="text-xl font-extrabold text-emerald-700">215</span>
+                        </div>
+                        <div class="bg-rose-50 p-3 rounded-xl border border-rose-100">
+                            <span class="text-rose-600 block text-[9px] font-bold">إجمالي النواقص المعلقة</span>
+                            <span id="pdf-summary-missing" class="text-xl font-extrabold text-rose-700">15</span>
+                        </div>
+                    </div>
+
+                    <!-- جدول جرد التفاصيل بالكامل لكافة أوردرات اليوم -->
+                    <div>
+                        <h3 class="text-xs font-black text-slate-700 mb-2 flex items-center gap-1">📋 جرد وتصنيف كافة الأوردرات (جرد داخلي)</h3>
+                        <table class="w-full text-right border-collapse text-[10px]">
+                            <thead>
+                                <tr class="bg-slate-100 border-b border-slate-300 text-slate-600">
+                                    <th class="p-2 border border-slate-200">#</th>
+                                    <th class="p-2 border border-slate-200">رقم الأوردر (Order_ID)</th>
+                                    <th class="p-2 border border-slate-200">رقم التتبع (Tracking)</th>
+                                    <th class="p-2 border border-slate-200 text-center">الحالة بالسيستم</th>
+                                    <th class="p-2 border border-slate-200">المسؤول عن الإسكان</th>
+                                    <th class="p-2 border border-slate-200">توقيت مسح الكرتونة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pdf-full-table-body" class="divide-y divide-slate-100">
+                                <!-- تملأ برمجياً بقائمة الأوردرات بالكامل -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- تذييل الصفحة الأولى -->
+                <div class="border-t border-slate-100 pt-3 text-[9px] text-slate-400 text-center flex justify-between">
+                    <span>Korean Beautys Logistics System</span>
+                    <span>الصفحة 1 من 2</span>
+                </div>
+            </div>
+
+            <!-- فاصل صفحات إجباري لـ html2pdf -->
+            <div class="html2pdf__page-break"></div>
+
+            <!-- 📄 الصفحة الثانية: إيصال تسليم المندوب الرسمي (The Delivery Manifest) -->
+            <div class="pdf-page relative min-h-[1050px] flex flex-col justify-between">
+                <div>
+                    <!-- ترويسة الصفحة الثانية -->
+                    <div class="flex justify-between items-center border-b-2 border-rose-600 pb-4">
+                        <div>
+                            <h1 class="text-2xl font-black text-rose-700 tracking-wide">KOREAN BEAUTYS</h1>
+                            <p class="text-[10px] text-slate-500 font-bold mt-1">إيصال رسمي بتسليم أوردرات لمندوب الشحن (Manifest)</p>
+                        </div>
+                        <div class="text-left text-[10px] text-slate-500 space-y-1">
+                            <p><strong>التاريخ:</strong> <span id="pdf-manifest-date">15-12-2026</span></p>
+                            <p><strong>مستند تسليم رقم:</strong> <span id="pdf-manifest-num">KB-MANIFEST-4921</span></p>
+                        </div>
+                    </div>
+
+                    <!-- صيغة الإقرار القانوني الرسمي والذكي -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 my-5 text-[11px] leading-relaxed text-slate-700">
+                        نقر نحن إدارة شحن ومستودعات <strong class="text-rose-700 font-extrabold">Korean Beautys</strong> بأنه في يوم 
+                        <span id="pdf-manifest-day-text" class="font-bold underline">الأحد</span> الموافق 
+                        <span id="pdf-manifest-date-text" class="font-bold underline">15-12-2026</span>، قد تم تسليم المندوب الموضح اسمه وتفاصيله أدناه طروداً وأوردرات مغلفة ومغلقة بالكامل عددها الإجمالي 
+                        (<span id="pdf-manifest-count-num" class="font-bold text-rose-600">215</span>) طرداً فقط لا غير، وبناءً عليه جرى توقيع هذا الإيصال الرسمي للاعتماد المتبادل.
+                    </div>
+
+                    <!-- تفاصيل المندوب المستلم -->
+                    <div class="grid grid-cols-3 gap-4 mb-5 p-3 rounded-lg border border-slate-100 text-[10px] bg-white">
+                        <p><strong>المندوب المستلم:</strong> <span id="pdf-manifest-courier-name">-</span></p>
+                        <p><strong>رقم الهوية:</strong> <span id="pdf-manifest-courier-id">-</span></p>
+                        <p><strong>رقم لوحة المركبة:</strong> <span id="pdf-manifest-car-plate">-</span></p>
+                    </div>
+
+                    <!-- جدول الأوردرات المفلترة (المشحونة والمسلمة فعلياً فقط) -->
+                    <div>
+                        <h3 class="text-xs font-black text-emerald-700 mb-2 flex items-center gap-1">🚚 الطرود المسلمة والمدرجة تحت مسؤولية الناقل</h3>
+                        <table class="w-full text-right border-collapse text-[10px]">
+                            <thead>
+                                <tr class="bg-slate-100 border-b border-slate-300 text-slate-600">
+                                    <th class="p-2 border border-slate-200">#</th>
+                                    <th class="p-2 border border-slate-200">رقم الأوردر (Order_ID)</th>
+                                    <th class="p-2 border border-slate-200">رقم التتبع (Tracking)</th>
+                                    <th class="p-2 border border-slate-200 text-center">حالة الاستلام</th>
+                                    <th class="p-2 border border-slate-200">المسؤول عن التأكيد</th>
+                                    <th class="p-2 border border-slate-200">وقت التحميل والتأكيد</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pdf-filtered-table-body" class="divide-y divide-slate-100">
+                                <!-- تملأ برمجياً بالأوردرات المشحونة فقط -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- قسم التوقيعات الثنائي المحمي منسق أسفل الصفحة -->
+                <div>
+                    <div class="grid grid-cols-2 gap-8 pt-8 pb-4 border-t border-slate-200 mt-6">
+                        <div class="space-y-12">
+                            <div class="text-center">
+                                <p class="font-extrabold text-slate-800 text-xs">مسؤول مستودع كوريان بيوتيز</p>
+                                <p class="text-[9px] text-slate-400">الاسم والتوقيع الرسمي</p>
+                            </div>
+                            <div class="border-b border-dashed border-slate-300 w-3/4 mx-auto pt-6 text-center text-[10px] text-slate-300">
+                                توقيع واعتماد المستودع
+                            </div>
+                        </div>
+                        <div class="space-y-12">
+                            <div class="text-center">
+                                <p class="font-extrabold text-slate-800 text-xs">مندوب شركة الشحن المستلم</p>
+                                <p class="text-[9px] text-slate-400">التوقيع وبصمة الاستلام</p>
+                            </div>
+                            <div class="border-b border-dashed border-slate-300 w-3/4 mx-auto pt-6 text-center text-[10px] text-slate-300">
+                                توقيع وبصمة المندوب
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- تذييل الصفحة الثانية -->
+                    <div class="border-t border-slate-100 pt-3 text-[9px] text-slate-400 text-center flex justify-between">
+                        <span>Korean Beautys Logistics System</span>
+                        <span>الصفحة 2 من 2</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- كود الجافا سكريبت التفاعلي لربط أجهزة عمال المخزن بالشبكة السحابية المشتركة -->
+    <script>
+        // --- 1. تكوين قاعدة بيانات الفايربيز للاتصال والتحقق ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9ru4RaYAHYUx26Na7P6fsXv9DeXwRu7w",
+            authDomain: "kbs-scanner.firebaseapp.com",
+            databaseURL: "https://kbs-scanner-default-rtdb.firebaseio.com/",
+            projectId: "kbs-scanner",
+            storageBucket: "kbs-scanner.appspot.com",
+            messagingSenderId: "544181986234",
+            appId: "1:544181986234:web:d797cd45ff81a2a52f738b",
+            measurementId: "G-SM1ME3PFD3"
+        };
+
+        // متغيرات الاتصال السحابية العامة المأمنة
+        let database = null;
+        let connectedRef = null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'korean-beautys-dispatch';
+
+        let orders = [];
+        let workerName = "عامل المخزن";
+
+        // دالة تهيئة الفايربيز بشكل آمن لتفادي الـ Global Script Error في حالة حظر مكاتب gstatic أو انقطاع الشبكة
+        function initFirebase() {
+            if (typeof firebase === 'undefined') {
+                console.error("Firebase library is not loaded yet.");
+                document.getElementById('cloud-status-text').textContent = "خطأ: لم يتم تحميل مكتبة Firebase";
+                document.getElementById('cloud-pulse').className = "w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse";
+                return false;
+            }
+            try {
+                firebase.initializeApp(firebaseConfig);
+                database = firebase.database();
+                return true;
+            } catch (e) {
+                console.error("Firebase initialization failed:", e);
+                return false;
+            }
+        }
+
+        // دالة آمنة لاستدعاء مكتبة Lucide وحمايتها من أخطاء الـ CDN
+        function createIconsSafe() {
+            try {
+                if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                    lucide.createIcons();
+                }
+            } catch (e) {
+                console.warn("Lucide icons failed to render:", e);
+            }
+        }
+
+        // --- 2. إدارة ملفات تعريف الموظف النشط وتعديل اسمه ---
+        window.addEventListener('DOMContentLoaded', () => {
+            createIconsSafe();
+            
+            // تهيئة الفايربيز والبدء بالاستماع للحالة
+            if (initFirebase()) {
+                const connectedRef = database.ref(".info/connected");
+                connectedRef.on("value", (snap) => {
+                    if (snap.val() === true) {
+                        document.getElementById('cloud-status-text').textContent = "متصل بالسحابة ومتزامن مع الأجهزة الأخرى";
+                        document.getElementById('cloud-pulse').className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
+                        showNotification("تم الاتصال بنجاح بالسحابة المشتركة لـ Korean Beautys!");
+                    } else {
+                        document.getElementById('cloud-status-text').textContent = "جاري الاتصال بالسحابة المشتركة...";
+                        document.getElementById('cloud-pulse').className = "w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse";
+                    }
+                });
+
+                // تفعيل مستمع التحديث اللحظي للبيانات لجميع المتصلين
+                setupRealtimeSync();
+            }
+            
+            // تهيئة واسترجاع اسم العامل من الذاكرة المحلية أو توليد واحد تلقائي
+            let savedName = localStorage.getItem('kb_worker_name');
+            if (!savedName) {
+                savedName = 'عامل-' + Math.floor(100 + Math.random() * 900);
+                localStorage.setItem('kb_worker_name', savedName);
+            }
+            workerName = savedName;
+            document.getElementById('worker-name-input').value = workerName;
+
+            // كشف الكاميرات المتاحة
+            detectCameras();
+        });
+
+        // حفظ الاسم الجديد للـ Worker ومزامنته محلياً
+        function saveWorkerName(name) {
+            const cleanName = name.trim();
+            if (cleanName) {
+                workerName = cleanName;
+                localStorage.setItem('kb_worker_name', workerName);
+                showNotification(`تم حفظ وتحديث الاسم إلى: ${workerName}`);
+            }
+        }
+
+        // --- 3. قراءة التحديثات المتزامنة فورياً لجميع الموظفين ---
+        function setupRealtimeSync() {
+            if (!database) return;
+            const ordersRef = database.ref(`artifacts/${appId}/orders`);
+            
+            ordersRef.on('value', (snapshot) => {
+                const val = snapshot.val();
+                if (val) {
+                    orders = Object.values(val);
+                } else {
+                    orders = [];
+                }
+                updateStats();
+                renderOrdersTable();
+                updateMissingList();
+            }, (error) => {
+                console.error("Database sync error:", error);
+                showNotification("فشل تحديث البيانات من السحابة اللحظية.", "error");
+            });
+        }
+
+        // تحديث مربعات العدادات اللحظية على الأجهزة المتصلة
+        function updateStats() {
+            const total = orders.length;
+            const shipped = orders.filter(o => o.status === 'Shipped').length;
+            const pending = total - shipped;
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-shipped').textContent = shipped;
+            document.getElementById('stat-pending').textContent = pending;
+
+            // العداد العائم أسفل الكاميرا
+            document.getElementById('scanner-count').textContent = shipped;
+            document.getElementById('badge-missing-count').textContent = `${pending} طرد متبقي`;
+        }
+
+        // عرض وتصفية جدول الأوردرات المرفوعة
+        function renderOrdersTable() {
+            const tbody = document.getElementById('orders-table-body');
+            tbody.innerHTML = '';
+
+            if (orders.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="p-8 text-center text-slate-400">
+                            <div class="flex flex-col items-center justify-center gap-2">
+                                <i data-lucide="cloud-off" class="w-8 h-8 opacity-60"></i>
+                                <span>في انتظار الرفع السحابي لليوم.. قم بسحب الشيت في اليمين للبدء.</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                createIconsSafe();
+                return;
+            }
+
+            // فرز الأوردرات لعرض الأحدث مسحاً في الأعلى دائماً
+            const sortedOrders = [...orders].sort((a, b) => {
+                if (a.scanTime && !b.scanTime) return -1;
+                if (!a.scanTime && b.scanTime) return 1;
+                if (a.scanTime && b.scanTime) {
+                    return b.scanTime.localeCompare(a.scanTime);
+                }
+                return 0;
+            });
+
+            sortedOrders.forEach(order => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors duration-150";
+                
+                const statusBadge = order.status === 'Shipped' 
+                    ? `<span class="bg-emerald-100 text-emerald-800 text-[11px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 justify-center w-max"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>تم الشحن</span>`
+                    : `<span class="bg-amber-100 text-amber-800 text-[11px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 justify-center w-max"><span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>معلق</span>`;
+
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-slate-700">${order.orderId}</td>
+                    <td class="p-3 font-mono text-slate-600">${order.trackingNumber}</td>
+                    <td class="p-3">${statusBadge}</td>
+                    <td class="p-3 text-slate-600 font-bold text-xs">${order.scannedBy || '—'}</td>
+                    <td class="p-3 text-slate-400 font-mono text-xs">${order.scanTime || '—'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            createIconsSafe();
+        }
+
+        // تفريغ وتصفية النواقص
+        function updateMissingList() {
+            const listContainer = document.getElementById('missing-orders-list');
+            listContainer.innerHTML = '';
+
+            const missing = orders.filter(o => o.status === 'Pending');
+
+            if (missing.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center text-emerald-600 py-6 text-xs bg-emerald-50 rounded-xl border border-emerald-100">
+                        ✨ عظيم! تم إسكان كافة الكراتين بنجاح ولا يوجد نواقص لليوم.
+                    </div>
+                `;
+                return;
+            }
+
+            missing.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "bg-rose-50 border border-rose-100/60 p-2.5 rounded-xl flex items-center justify-between text-xs";
+                div.innerHTML = `
+                    <div>
+                        <p class="font-extrabold text-slate-700">${item.orderId}</p>
+                        <p class="font-mono text-slate-400 text-[10px] mt-0.5">التتبع: ${item.trackingNumber}</p>
+                    </div>
+                    <span class="text-rose-600 font-extrabold flex items-center gap-1">
+                        <i data-lucide="clock" class="w-3.5 h-3.5 animate-spin"></i> متبقي
+                    </span>
+                `;
+                listContainer.appendChild(div);
+            });
+            createIconsSafe();
+        }
+
+
+        // --- 4. رفع ومعالجة شيت البيانات لجميع الأجهزة (دعم Excel و CSV) ---
+        async function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const loader = document.createElement('div');
+            loader.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center text-white text-lg font-bold";
+            loader.innerHTML = `
+                <div class="bg-white text-slate-800 p-6 rounded-2xl flex flex-col items-center gap-4 shadow-xl">
+                    <div class="w-10 h-10 border-4 border-rose-600 border-t-transparent rounded-full animate-spin"></div>
+                    <p>جاري تحليل وتجهيز ملف الشحنة...</p>
+                </div>
+            `;
+            document.body.appendChild(loader);
+
+            if (typeof XLSX === 'undefined') {
+                loader.remove();
+                showNotification("مكتبة قراءة ملفات Excel غير متوفرة بعد، يرجى مراجعة اتصال الإنترنت.", "error");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    
+                    if (workbook.SheetNames.length === 0) {
+                        loader.remove();
+                        showNotification("الملف المرفوع فارغ ولا يحتوي على أي صفحات.", "error");
+                        return;
+                    }
+
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // تحويل الشيت لصفوف برمجية مرنة
+                    const rows = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+                    
+                    if (rows.length < 2) {
+                        loader.remove();
+                        showNotification("الملف يحتوي على عدد صفوف غير كافٍ.", "error");
+                        return;
+                    }
+
+                    // البحث عن صف العناوين الأول الفعلي غير الفارغ
+                    let hIdx = -1;
+                    for (let i = 0; i < rows.length; i++) {
+                        if (rows[i] && rows[i].filter(cell => cell !== null && cell !== undefined && String(cell).trim() !== '').length >= 2) {
+                            hIdx = i;
+                            break;
+                        }
+                    }
+
+                    if (hIdx === -1) {
+                        loader.remove();
+                        showNotification("لم نتمكن من العثور على صف العناوين بالملف.", "error");
+                        return;
+                    }
+
+                    const headers = rows[hIdx];
+                    const mapping = findColumns(headers);
+
+                    if (mapping.orderIdColIdx === -1 || mapping.trackingColIdx === -1) {
+                        loader.remove();
+                        showNotification("فشل التعرف التلقائي على الأعمدة. تأكد من مسميات أعمدة (رقم الأوردر / رقم التتبع) بالشيت.", "error");
+                        return;
+                    }
+
+                    const parsedOrders = {};
+                    let count = 0;
+
+                    for (let i = hIdx + 1; i < rows.length; i++) {
+                        const row = rows[i];
+                        if (!row || row.length === 0) continue;
+
+                        const orderIdRaw = row[mapping.orderIdColIdx];
+                        const trackingNumberRaw = row[mapping.trackingColIdx];
+
+                        if (orderIdRaw !== undefined && orderIdRaw !== null && trackingNumberRaw !== undefined && trackingNumberRaw !== null) {
+                            const orderId = String(orderIdRaw).trim();
+                            const trackingNumber = String(trackingNumberRaw).trim();
+
+                            if (orderId && trackingNumber) {
+                                parsedOrders[trackingNumber] = {
+                                    orderId: orderId,
+                                    trackingNumber: trackingNumber,
+                                    status: 'Pending',
+                                    scanTime: null,
+                                    scannedBy: null
+                                };
+                                count++;
+                            }
+                        }
+                    }
+
+                    loader.remove();
+
+                    if (count > 0) {
+                        uploadToRealtimeDatabase(parsedOrders, count);
+                    } else {
+                        showNotification("لم نتمكن من استخراج أي بيانات أوردرات صالحة من الملف.", "error");
+                    }
+                } catch (error) {
+                    console.error("Error reading file:", error);
+                    loader.remove();
+                    showNotification("حدث خطأ ما أثناء قراءة وتجهيز الملف.", "error");
+                }
+            };
+
+            reader.onerror = function() {
+                loader.remove();
+                showNotification("حدث خطأ أثناء تحميل الملف من الذاكرة.", "error");
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        // الذكاء الاصطناعي لتمييز وتحديد الأعمدة تلقائياً
+        function findColumns(headers) {
+            let orderIdColIdx = -1;
+            let trackingColIdx = -1;
+
+            // تطبيع مسميات الأعمدة: تنظيف المسافات وتحويل الحروف لصغيرة
+            const normHeaders = headers.map(h => h ? String(h).trim().toLowerCase() : "");
+
+            // 1. تجربة البحث عن تطابقات صريحة وقوية أولاً
+            const strongOrderId = ['order_id', 'order id', 'رقم الأوردر', 'رقم الاوردر', 'رقم الطلب', 'مسلسل الأوردر', 'مسلسل الاوردر', 'order_no', 'order no', 'id'];
+            const strongTracking = ['tracking_number', 'tracking number', 'tracking_no', 'tracking no', 'waybill', 'airwaybill', 'بوليصة الشحن', 'رقم الشحن', 'شركة الشحن', 'رقم التتبع', 'رقم تتبع', 'البوليصة', 'بوليصة'];
+
+            for (let i = 0; i < normHeaders.length; i++) {
+                const h = normHeaders[i];
+                if (strongOrderId.includes(h)) {
+                    orderIdColIdx = i;
+                }
+                if (strongTracking.includes(h)) {
+                    trackingColIdx = i;
+                }
+            }
+
+            // 2. الفولباك للبحث بكلمات جزئية ضعيفة في حال عدم العثور على تطابق صريح
+            const weakOrderId = ['order', 'id', 'رقم', 'أوردر', 'اوردر', 'مسلسل', 'الطلب'];
+            const weakTracking = ['tracking', 'waybill', 'airwaybill', 'البوليصة', 'التتبع', 'بوليصة', 'تتبع', 'شحن'];
+
+            if (orderIdColIdx === -1) {
+                for (let i = 0; i < normHeaders.length; i++) {
+                    const h = normHeaders[i];
+                    if (weakOrderId.some(keyword => h.includes(keyword)) && i !== trackingColIdx) {
+                        orderIdColIdx = i;
+                        break;
+                    }
+                }
+            }
+
+            if (trackingColIdx === -1) {
+                for (let i = 0; i < normHeaders.length; i++) {
+                    const h = normHeaders[i];
+                    if (weakTracking.some(keyword => h.includes(keyword)) && i !== orderIdColIdx) {
+                        trackingColIdx = i;
+                        break;
+                    }
+                }
+            }
+
+            return { orderIdColIdx, trackingColIdx };
+        }
+
+        async function uploadToRealtimeDatabase(ordersMap, size) {
+            const loader = document.createElement('div');
+            loader.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center text-white text-lg font-bold";
+            loader.innerHTML = `
+                <div class="bg-white text-slate-800 p-6 rounded-2xl flex flex-col items-center gap-4 shadow-xl">
+                    <div class="w-10 h-10 border-4 border-rose-600 border-t-transparent rounded-full animate-spin"></div>
+                    <p>جاري رفع وتثبيت ${size} أوردر على السحابة...</p>
+                </div>
+            `;
+            document.body.appendChild(loader);
+
+            try {
+                if (!database) {
+                    showNotification("قاعدة البيانات غير متصلة.", "error");
+                    loader.remove();
+                    return;
+                }
+                // حفظ كافة البيانات بمستودع اليوم بالـ Realtime Database
+                await database.ref(`artifacts/${appId}/orders`).set(ordersMap);
+                loader.remove();
+                showNotification(`تم بنجاح رفع وتأسيس ${size} أوردر سحابياً لجميع الأجهزة!`);
+            } catch (error) {
+                console.error("Upload failed", error);
+                loader.remove();
+                showNotification("فشل دفع وتأسيس البيانات السحابية.", "error");
+            }
+        }
+
+        // تصفير وتنظيف السحابة لبدء الوردية التالية
+        async function clearAllOrders() {
+            const confirmModal = document.createElement('div');
+            confirmModal.className = "fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 text-right";
+            confirmModal.innerHTML = `
+                <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
+                    <h3 class="text-lg font-extrabold text-slate-800">⚠️ تأكيد تصفير ومسح السحابة</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">
+                        هل أنت متأكد من مسح كافة أوردرات اليوم من السحابة؟ هذا الإجراء سيقوم بتصفير العدادات والبيانات لدى **جميع موظفي المخزن على كافة الهواتف** فوراً لتأسيس شحنة جديدة.
+                    </p>
+                    <div class="flex gap-3 justify-end pt-2">
+                        <button id="cancel-clear-btn" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50">إلغاء</button>
+                        <button id="confirm-clear-btn" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold">تأكيد المسح الكلي</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmModal);
+
+            document.getElementById('cancel-clear-btn').onclick = () => confirmModal.remove();
+            document.getElementById('confirm-clear-btn').onclick = async () => {
+                confirmModal.remove();
+                const loader = document.createElement('div');
+                loader.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center text-white text-lg font-bold";
+                loader.innerHTML = `
+                    <div class="bg-white text-slate-800 p-6 rounded-2xl flex flex-col items-center gap-4 shadow-xl">
+                        <div class="w-10 h-10 border-4 border-rose-600 border-t-transparent rounded-full animate-spin"></div>
+                        <p>جاري مسح السحابة للوردية الجديدة...</p>
+                    </div>
+                `;
+                document.body.appendChild(loader);
+
+                try {
+                    if (!database) {
+                        showNotification("قاعدة البيانات غير متصلة.", "error");
+                        loader.remove();
+                        return;
+                    }
+                    await database.ref(`artifacts/${appId}/orders`).remove();
+                    loader.remove();
+                    showNotification("تم تصفير وإفراغ السحابة للوردية بنجاح!");
+                } catch (error) {
+                    console.error("Clear error:", error);
+                    loader.remove();
+                    showNotification("فشل إتمام عملية التصفير السحابي.", "error");
+                }
+            };
+        }
+
+
+        // --- 5. معالجة وتفقد الباركود سحابياً والسيناريوهات الثلاثة ---
+        let html5QrCode = null;
+        let activeCameraId = null;
+        let isTorchOn = false;
+        let scanCooldown = false;
+
+        function startScanning() {
+            if (typeof Html5Qrcode === 'undefined') {
+                showNotification("مكتبة الماسح الضوئي غير جاهزة بعد.", "error");
+                return;
+            }
+            if (html5QrCode && html5QrCode.isScanning) return;
+
+            html5QrCode = new Html5Qrcode("reader");
+            const config = { 
+                fps: 20, 
+                qrbox: { width: 250, height: 180 },
+                aspectRatio: 1.333
+            };
+
+            const cameraId = activeCameraId || { facingMode: "environment" };
+
+            html5QrCode.start(cameraId, config, (text) => {
+                if (scanCooldown) return;
+                processBarcode(text);
+            }, () => {}).catch(err => {
+                console.error("Failed to start scanner:", err);
+            });
+        }
+
+        function stopScanning() {
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop().catch(err => console.error(err));
+            }
+        }
+
+        function restartScannerWithSelectedCamera() {
+            const select = document.getElementById('camera-select');
+            if (select.value) {
+                activeCameraId = select.value;
+                if (html5QrCode && html5QrCode.isScanning) {
+                    html5QrCode.stop().then(() => startScanning());
+                } else {
+                    startScanning();
+                }
+            }
+        }
+
+        function toggleTorch() {
+            if (html5QrCode && html5QrCode.isScanning) {
+                isTorchOn = !isTorchOn;
+                html5QrCode.applyVideoConstraints({
+                    advanced: [{ torch: isTorchOn }]
+                }).then(() => {
+                    const btn = document.getElementById('torch-btn');
+                    btn.className = isTorchOn 
+                        ? "bg-amber-500 hover:bg-amber-600 text-white p-2.5 rounded-xl transition-all duration-150 relative group"
+                        : "bg-slate-100 hover:bg-slate-200 text-slate-700 p-2.5 rounded-xl transition-all duration-150 relative group";
+                }).catch(() => {
+                    showNotification("الكشاف غير مدعوم على هذه العدسة أو الجهاز.", "error");
+                });
+            } else {
+                showNotification("يرجى تشغيل الكاميرا أولاً لتفعيل الكشاف.", "error");
+            }
+        }
+
+        async function processBarcode(barcode) {
+            barcode = barcode.trim();
+            if (!barcode) return;
+
+            // فحص وجود الباركود بذاكرة السحابة المحلية
+            const orderIndex = orders.findIndex(o => o.trackingNumber === barcode);
+
+            if (orderIndex !== -1) {
+                const targetOrder = orders[orderIndex];
+
+                if (targetOrder.status === 'Shipped') {
+                    // [السيناريو الثاني: أوردر مكرر ومستلم مسبقاً]
+                    triggerDuplicateState(targetOrder);
+                } else {
+                    // [السيناريو الأول: إسكان ناجح لأول مرة]
+                    await triggerSuccessState(targetOrder);
+                }
+            } else {
+                // [السيناريو الثالث: أوردر خاطئ وغير مسجل بالسيستم]
+                triggerErrorState(barcode);
+            }
+        }
+
+        // سيناريو الإسكان السحابي الناجح
+        async function triggerSuccessState(order) {
+            scanCooldown = true;
+            const scanTime = getFormattedTimestamp();
+
+            try {
+                if (!database) {
+                    showNotification("قاعدة البيانات غير متصلة.", "error");
+                    scanCooldown = false;
+                    return;
+                }
+                // تحديث كائن الأوردر المحدد برقم التتبع على السحابة فوراً
+                await database.ref(`artifacts/${appId}/orders/${order.trackingNumber}`).update({
+                    status: 'Shipped',
+                    scanTime: scanTime,
+                    scannedBy: workerName
+                });
+
+                // المخرجات الصوتية والاهتزاز
+                playTone(800, 'sine', 150);
+                vibrateDevice([100]);
+
+                const overlay = document.getElementById('overlay-success');
+                document.getElementById('overlay-success-id').textContent = `رقم الأوردر: ${order.orderId}`;
+                overlay.classList.add('overlay-active');
+
+                logScanAction(`✅ تم إسكان: ${order.orderId} بواسطة الموظف (${workerName})`);
+
+                setTimeout(() => {
+                    overlay.classList.remove('overlay-active');
+                    scanCooldown = false;
+                }, 1000);
+            } catch (error) {
+                console.error("Cloud update failed:", error);
+                showNotification("فشل تسجيل الإسكان على قاعدة البيانات اللحظية.", "error");
+                scanCooldown = false;
+            }
+        }
+
+        // سيناريو الأوردر المكرر
+        function triggerDuplicateState(order) {
+            scanCooldown = true;
+
+            playTone(400, 'triangle', 100);
+            setTimeout(() => playTone(400, 'triangle', 100), 120);
+            vibrateDevice([100, 50, 100]);
+
+            const overlay = document.getElementById('overlay-duplicate');
+            overlay.classList.add('overlay-active');
+
+            logScanAction(`⚠️ مكرر: ${order.orderId} تم مسحه مسبقاً بواسطة ${order.scannedBy || 'مجهول'}`);
+
+            setTimeout(() => {
+                overlay.classList.remove('overlay-active');
+                scanCooldown = false;
+            }, 1200);
+        }
+
+        // سيناريو الأوردر الخاطئ (قفل الأمان المؤقت)
+        function triggerErrorState(barcode) {
+            scanCooldown = true;
+            
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.pause(); 
+            }
+
+            playBuzzSound();
+            vibrateDevice([600]);
+
+            const overlay = document.getElementById('overlay-error');
+            overlay.classList.add('overlay-active');
+
+            logScanAction(`❌ خطأ: باركود غير مدرج بالوردية (${barcode})`);
+        }
+
+        function resumeScanningAfterError() {
+            const overlay = document.getElementById('overlay-error');
+            overlay.classList.remove('overlay-active');
+            
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.resume();
+            }
+            scanCooldown = false;
+        }
+
+        function simulateScanAction() {
+            const input = document.getElementById('sim-input');
+            const val = input.value.trim();
+            if (!val) {
+                showNotification("يرجى إدخال قيمة التتبع أولاً للتجربة.", "error");
+                return;
+            }
+            processBarcode(val);
+            input.value = '';
+        }
+
+
+        // --- 6. محرك تصدير الـ PDF وإيصال التسليم المفلتر الذكي ---
+        function generatePDFReport() {
+            if (orders.length === 0) {
+                showNotification("لا يوجد أي أوردرات مرفوعة على السحابة لتوليد التقرير.", "error");
+                return;
+            }
+
+            const loader = document.createElement('div');
+            loader.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center text-white text-lg font-bold";
+            loader.innerHTML = `
+                <div class="bg-white text-slate-800 p-6 rounded-2xl flex flex-col items-center gap-4 shadow-xl">
+                    <div class="w-10 h-10 border-4 border-rose-600 border-t-transparent rounded-full animate-spin"></div>
+                    <p>جاري تجميع بيانات الأوردرات المتزامنة والطباعة...</p>
+                </div>
+            `;
+            document.body.appendChild(loader);
+
+            if (typeof html2pdf === 'undefined') {
+                loader.remove();
+                showNotification("مكتبة توليد التقارير PDF غير جاهزة بعد.", "error");
+                return;
+            }
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('ar-EG', { year: 'numeric', month: 'numeric', day: 'numeric' });
+            const dayName = now.toLocaleDateString('ar-EG', { weekday: 'long' });
+            const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+
+            const total = orders.length;
+            const shippedList = orders.filter(o => o.status === 'Shipped');
+            const missingList = orders.filter(o => o.status === 'Pending');
+
+            document.getElementById('pdf-date').textContent = dateStr;
+            document.getElementById('pdf-manifest-date').textContent = dateStr;
+            document.getElementById('pdf-time').textContent = timeStr;
+
+            document.getElementById('pdf-summary-total').textContent = total;
+            document.getElementById('pdf-summary-shipped').textContent = shippedList.length;
+            document.getElementById('pdf-summary-missing').textContent = missingList.length;
+
+            document.getElementById('pdf-manifest-day-text').textContent = dayName;
+            document.getElementById('pdf-manifest-date-text').textContent = dateStr;
+            document.getElementById('pdf-manifest-count-num').textContent = shippedList.length;
+
+            const courierName = document.getElementById('pdf-courier-name').value || '—';
+            const courierId = document.getElementById('pdf-courier-id').value || '—';
+            const carPlate = document.getElementById('pdf-car-plate').value || '—';
+
+            document.getElementById('pdf-manifest-courier-name').textContent = courierName;
+            document.getElementById('pdf-manifest-courier-id').textContent = courierId;
+            document.getElementById('pdf-car-plate').textContent = carPlate;
+
+            // ملء جدول الجرد الكلي
+            const fullTbody = document.getElementById('pdf-full-table-body');
+            fullTbody.innerHTML = '';
+            orders.forEach((o, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-100";
+                
+                const badge = o.status === 'Shipped' 
+                    ? `<span style="color:#059669; font-weight:bold;">تم الشحن</span>`
+                    : `<span style="color:#dc2626; font-weight:bold;">لم يشحن</span>`;
+
+                tr.innerHTML = `
+                    <td class="p-1.5 border border-slate-200 text-center">${index + 1}</td>
+                    <td class="p-1.5 border border-slate-200 font-bold">${o.orderId}</td>
+                    <td class="p-1.5 border border-slate-200 font-mono">${o.trackingNumber}</td>
+                    <td class="p-1.5 border border-slate-200 text-center">${badge}</td>
+                    <td class="p-1.5 border border-slate-200 font-mono text-slate-700 text-center">${o.scannedBy || '—'}</td>
+                    <td class="p-1.5 border border-slate-200 font-mono text-slate-500">${o.scanTime || '—'}</td>
+                `;
+                fullTbody.appendChild(tr);
+            });
+
+            // ملء جدول تسليم المندوب المفلتر (المشحون فقط)
+            const filteredTbody = document.getElementById('pdf-filtered-table-body');
+            filteredTbody.innerHTML = '';
+            if (shippedList.length === 0) {
+                filteredTbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding:20px; color:#94a3b8;">
+                            لا يوجد أي أوردرات مشحونة لتسليمها للمندوب في هذا البيان.
+                        </td>
+                    </tr>
+                `;
+            } else {
+                shippedList.forEach((o, index) => {
+                    const tr = document.createElement('tr');
+                    tr.className = "border-b border-slate-100";
+                    tr.innerHTML = `
+                        <td class="p-1.5 border border-slate-200 text-center">${index + 1}</td>
+                        <td class="p-1.5 border border-slate-200 font-bold">${o.orderId}</td>
+                        <td class="p-1.5 border border-slate-200 font-mono">${o.trackingNumber}</td>
+                        <td class="p-1.5 border border-slate-200 text-center" style="color:#059669; font-weight:bold;">✓ مُسلم باليد</td>
+                        <td class="p-1.5 border border-slate-200 font-mono text-slate-700 text-center">${o.scannedBy || '—'}</td>
+                        <td class="p-1.5 border border-slate-200 font-mono text-slate-500">${o.scanTime}</td>
+                    `;
+                    filteredTbody.appendChild(tr);
+                });
+            }
+
+            const pdfArea = document.getElementById('pdf-template-wrapper');
+            pdfArea.classList.remove('hidden');
+
+            const element = document.getElementById('pdf-document');
+            const opt = {
+                margin:       0.3,
+                filename:     `Korean_Beautys_Manifest_${dateStr.replace(/\//g, '-')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().from(element).set(opt).save().then(() => {
+                pdfArea.classList.add('hidden');
+                loader.remove();
+                showNotification("تم توليد إيصال التسليم والمانيفست السحابي بنجاح!");
+            }).catch(err => {
+                console.error(err);
+                pdfArea.classList.add('hidden');
+                loader.remove();
+                showNotification("حدث خطأ أثناء تصدير مستند الـ PDF.", "error");
+            });
+        }
+
+
+        // --- 7. خدمات النغمات والاهتزاز والمساعدات الفنية المدمجة ---
+        function vibrateDevice(pattern) {
+            if ('vibrate' in navigator) navigator.vibrate(pattern);
+        }
+
+        let audioCtx = null;
+        function initAudioContext() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playTone(frequency, type, duration) {
+            try {
+                initAudioContext();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.type = type;
+                oscillator.frequency.value = frequency;
+                gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + (duration / 1000));
+            } catch (e) {}
+        }
+
+        function playBuzzSound() {
+            try {
+                initAudioContext();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(130, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(70, audioCtx.currentTime + 0.5);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            } catch (e) {}
+        }
+
+        function logScanAction(message) {
+            const logBox = document.getElementById('live-scan-log');
+            const p = document.createElement('p');
+            p.className = "py-1 border-b border-slate-100 last:border-0";
+            p.textContent = `[${getFormattedTimestamp()}] ${message}`;
+            if (logBox.querySelector('p.italic')) logBox.innerHTML = '';
+            logBox.prepend(p);
+        }
+
+        // الحصول على الوقت المنسق
+        function getFormattedTimestamp() {
+            const now = new Date();
+            return now.toTimeString().split(' ')[0];
+        }
+
+        // إشعار مستخدم مخصص غير منبثق
+        function showNotification(msg, type = "success") {
+            const div = document.createElement('div');
+            div.className = `fixed bottom-5 left-5 z-50 p-4 rounded-xl shadow-lg text-sm font-bold text-white transition-all transform translate-y-10 opacity-0 duration-300 ${
+                type === 'error' ? 'bg-rose-600' : 'bg-slate-800'
+            }`;
+            div.textContent = msg;
+            document.body.appendChild(div);
+            setTimeout(() => div.classList.remove('translate-y-10', 'opacity-0'), 50);
+            setTimeout(() => {
+                div.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => div.remove(), 300);
+            }, 3500);
+        }
+
+        // كشف الكاميرات المتاحة
+        function detectCameras() {
+            if (typeof Html5Qrcode === 'undefined') return;
+            Html5Qrcode.getCameras().then(cameras => {
+                const select = document.getElementById('camera-select');
+                select.innerHTML = '';
+                if (cameras && cameras.length > 0) {
+                    cameras.forEach((camera, index) => {
+                        const opt = document.createElement('option');
+                        opt.value = camera.id;
+                        opt.textContent = camera.label || `كاميرا ${index + 1}`;
+                        select.appendChild(opt);
+                    });
+                    activeCameraId = cameras[0].id;
+                } else {
+                    select.innerHTML = '<option value="">لا يوجد كاميرا</option>';
+                }
+            }).catch(() => {});
+        }
+
+        // تبديل الألسن والتبويبات
+        window.switchTab = (tabId) => {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200 text-white hover:bg-white/10";
+            });
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) activeBtn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200 bg-white text-rose-700 shadow-sm";
+            
+            document.getElementById('section-upload').classList.add('hidden');
+            document.getElementById('section-scanner').classList.add('hidden');
+            document.getElementById('section-reports').classList.add('hidden');
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+
+            if (tabId === 'scanner') startScanning();
+            else stopScanning();
+        };
+
+        window.handleFileSelect = handleFileSelect;
+        window.clearAllOrders = clearAllOrders;
+        window.toggleTorch = toggleTorch;
+        window.restartScannerWithSelectedCamera = restartScannerWithSelectedCamera;
+        window.startScanning = startScanning;
+        window.stopScanning = stopScanning;
+        window.resumeScanningAfterError = resumeScanningAfterError;
+        window.simulateScanAction = simulateScanAction;
+        window.generatePDFReport = generatePDFReport;
+        window.saveWorkerName = saveWorkerName;
+
+        // تصفية سريعة داخل الجدول
+        window.filterTable = () => {
+            const val = document.getElementById('search-input').value.toLowerCase();
+            const rows = document.querySelectorAll('#orders-table-body tr');
+            rows.forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(val) ? '' : 'none';
+            });
+        };
+    </script>
+</body>
+</html>
