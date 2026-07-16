@@ -65,7 +65,7 @@
                     <i data-lucide="scan-barcode" class="w-4 h-4"></i> محطة الموبايل
                 </button>
                 <button onclick="switchTab('reports')" id="tab-reports" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200 text-white hover:bg-white/10">
-                    <i data-lucide="file-text" class="w-4 h-4"></i> التقرير والإغلاق
+                    <i data-lucide="file-text" class="w-4 h-4"></i> Tالتقرير والإغلاق
                 </button>
             </nav>
         </div>
@@ -83,7 +83,7 @@
             </span>
             <span class="text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                قناة التحديث اللحظي السريع نشطة (تم تفعيل فلتر حجب الأخطاء 🛡️)
+                قناة التحديث اللحظي الفوري مستقرة 🚀
             </span>
         </div>
     </div>
@@ -125,35 +125,49 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- شاشة الرفع والتهيئة السحابية -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-1 flex flex-col justify-between space-y-4">
-                    <div>
-                        <h2 class="text-lg font-extrabold text-slate-800 flex items-center gap-2 mb-3">
-                            <i data-lucide="file-up" class="text-rose-600"></i> رفع شيت الأوردرات المشترك
-                        </h2>
-                        <p class="text-slate-500 text-sm mb-4 leading-relaxed">
-                            قم برفع شيت اليوم بصيغة **Excel (.xlsx, .xls)** أو **CSV**. سيقوم النظام السحابي بالتعرف التلقائي على الأعمدة ومشاركتها مع جميع العمال فوراً.
-                        </p>
-
-                        <!-- منطقة الرفع بالتفاعل السحب والإفلات -->
-                        <div id="drop-zone" class="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:border-rose-500 transition-colors cursor-pointer bg-slate-50 relative">
-                            <input type="file" id="csv-file" accept=".csv, .xlsx, .xls, .txt" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="handleFileSelect(event)">
-                            <div class="space-y-2">
-                                <div class="bg-white shadow-sm p-3 inline-block rounded-full text-rose-600 mx-auto">
-                                    <i data-lucide="upload" class="w-6 h-6"></i>
+                <!-- شاشة الرفع والتهيئة السحابية + خانة الإضافة اليدوية الجديدة -->
+                <div class="lg:col-span-1 space-y-4">
+                    <!-- كارت رفع الشيت التلقائي -->
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between space-y-3">
+                        <div>
+                            <h2 class="text-base font-extrabold text-slate-800 flex items-center gap-2 mb-2">
+                                <i data-lucide="file-up" class="text-rose-600"></i> رفع شيت الأوردرات المشترك
+                            </h2>
+                            <div id="drop-zone" class="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center hover:border-rose-500 transition-colors cursor-pointer bg-slate-50 relative">
+                                <input type="file" id="csv-file" accept=".csv, .xlsx, .xls, .txt" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="handleFileSelect(event)">
+                                <div class="space-y-1">
+                                    <p class="text-xs font-bold text-slate-700">اسحب شيت الـ Excel هنا</p>
                                 </div>
-                                <p class="text-sm font-bold text-slate-700">اسحب الملف هنا أو تصفحه</p>
-                                <p class="text-xs text-slate-400">يدعم ملفات Excel (.xlsx) و CSV المنسقة</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="pt-4 border-t border-slate-100 space-y-2">
-                        <!-- تصفير السحابة الحالية لبدء يوم جديد -->
-                        <button onclick="clearAllOrders()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 transition-all duration-150">
-                            <i data-lucide="rotate-ccw" class="w-4 h-4 text-rose-400"></i> تصفير ومسح السحابة لليوم الجديد
+                    <!-- 🆕 كارت إضافة أوردر فردي يدوي جديد بدون شيت 🆕 -->
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 space-y-3">
+                        <h2 class="text-base font-extrabold text-slate-800 flex items-center gap-2 border-b pb-2">
+                            <i data-lucide="plus-circle" class="text-rose-600"></i> إضافة أوردر يدوي مفرد
+                        </h2>
+                        <p class="text-xs text-slate-400 leading-relaxed">أدخل تفاصيل الأوردر لإضافته فوراً للسحابة بدون الحاجة لرفع شيت كامل:</p>
+                        <div class="space-y-2">
+                            <div>
+                                <label class="text-[11px] font-bold text-slate-500 block mb-1">رقم الأوردر (Order ID):</label>
+                                <input type="text" id="manual-order-id" placeholder="مثال: #116800" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-rose-500">
+                            </div>
+                            <div>
+                                <label class="text-[11px] font-bold text-slate-500 block mb-1">رقم التتبع أو البوليصة (Tracking):</label>
+                                <input type="text" id="manual-tracking-num" placeholder="مثال: 294025114" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-rose-500">
+                            </div>
+                            <button onclick="addSingleManualOrder()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all">
+                                <i data-lucide="plus" class="w-3.5 h-3.5 text-emerald-400"></i> تثبيت الأوردر في السحابة
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- كارت تصفير الوردية -->
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 pt-3">
+                        <button onclick="clearAllOrders()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> تصفير ومسح السحابة لليوم الجديد
                         </button>
-                        <p class="text-[11px] text-slate-400 text-center">يقوم بمسح الأوردرات من السحابة لدى جميع الأجهزة فوراً.</p>
                     </div>
                 </div>
 
@@ -173,7 +187,7 @@
                         </div>
                     </div>
 
-                    <div class="overflow-x-auto border border-slate-100 rounded-xl max-h-[300px] overflow-y-auto">
+                    <div class="overflow-x-auto border border-slate-100 rounded-xl max-h-[420px] overflow-y-auto">
                         <table class="w-full text-right text-sm">
                             <thead class="bg-slate-50 text-slate-500 sticky top-0 shadow-sm z-10">
                                 <tr>
@@ -189,7 +203,7 @@
                                     <td colspan="5" class="p-8 text-center text-slate-400">
                                         <div class="flex flex-col items-center justify-center gap-2">
                                             <i data-lucide="cloud-off" class="w-8 h-8 opacity-60"></i>
-                                            <span>في انتظار الرفع السحابي لليوم.. قم بسحب الشيت في اليمين للبدء.</span>
+                                            <span>في انتظار الرفع السحابي لليوم.. قم بسحب الشيت في اليمين أو أضف يدوياً.</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -204,7 +218,7 @@
         <section id="section-scanner" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                <!-- عمود كاميرا الموبايل المستمرة -->
+                <!-- column كاميرا الموبايل المستمرة -->
                 <div class="lg:col-span-2 space-y-4">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden">
                         
@@ -216,31 +230,24 @@
                                 <p class="text-slate-400 text-xs">سجل عملياتك مع زملائك في المستودع بالتوازي</p>
                             </div>
                             <div class="flex gap-2">
-                                <!-- زر تفعيل الفلاش -->
                                 <button onclick="toggleTorch()" id="torch-btn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 p-2.5 rounded-xl transition-all duration-150 relative group" title="تشغيل الكشاف">
                                     <i data-lucide="flashlight" class="w-5 h-5"></i>
                                 </button>
-                                <!-- اختيار الكاميرا المناسبة -->
                                 <select id="camera-select" onchange="restartScannerWithSelectedCamera()" class="border border-slate-200 rounded-xl px-3 py-1.5 text-xs bg-slate-50 focus:outline-none">
                                     <option value="">جاري الكشف عن الكاميرات...</option>
                                 </select>
                             </div>
                         </div>
 
-                        <!-- صندوق قارئ الكاميرا الفعلي محاط بإطار أنيق وتفاعلي للسيناريوهات -->
                         <div class="relative w-full aspect-video md:aspect-[4/3] rounded-2xl bg-black overflow-hidden border border-slate-200 shadow-inner">
-                            
-                            <!-- عنصر الفيديو الخاص بقارئ الباركود -->
                             <div id="reader" class="w-full h-full"></div>
 
-                            <!-- الإطار الشفاف الافتراضي (Scanner Target) -->
                             <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
                                 <div class="w-64 h-40 border-2 border-dashed border-white/50 rounded-xl flex items-center justify-center bg-black/20 backdrop-blur-[0.5px]">
                                     <div class="text-[11px] text-white/80 bg-black/60 px-2 py-1 rounded">ضع الباركود هنا</div>
                                 </div>
                             </div>
 
-                            <!-- عداد الإسكان العائم باللون الأخضر أسفل الفيديو -->
                             <div class="absolute bottom-4 right-4 left-4 flex justify-between items-center bg-black/70 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10 pointer-events-none">
                                 <div class="flex items-center gap-2">
                                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse animate-duration-1000"></span>
@@ -278,7 +285,6 @@
                                     <h4 class="text-2xl font-extrabold tracking-wide">خطأ! غير مسجل بالسحابة</h4>
                                     <p class="text-sm text-rose-100">هذا الطرد لا ينتمي لقاعدة البيانات المرفوعة اليوم!</p>
                                 </div>
-                                <!-- زر إجباري لمتابعة الإسكان وإلغاء القفل للأمان -->
                                 <button onclick="resumeScanningAfterError()" class="bg-white hover:bg-slate-50 text-rose-700 font-extrabold py-3.5 px-8 rounded-xl shadow-md text-base transition-all active:scale-95 flex items-center gap-2">
                                     <i data-lucide="play" class="w-5 h-5"></i> متابعة الإسكان
                                 </button>
@@ -297,7 +303,7 @@
                     </div>
                 </div>
 
-                <!-- عمود فحص ومحاكاة الباركود (مثالي لتجربة فورية بدون طباعة باركودات) -->
+                <!-- عمود فحص ومحاكاة الباركود -->
                 <div class="lg:col-span-1 space-y-4">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-full">
                         <div>
@@ -316,7 +322,6 @@
                                     </ul>
                                 </div>
 
-                                <!-- حقل إدخال المحاكاة اليدوية -->
                                 <div class="space-y-1.5">
                                     <label class="text-xs font-bold text-slate-600">أدخل رقم التتبع يدوياً للمحاكاة السحابية:</label>
                                     <div class="flex gap-2">
@@ -327,7 +332,6 @@
                             </div>
                         </div>
 
-                        <!-- سجل الإسكان المباشر في الجانب -->
                         <div class="mt-4 pt-4 border-t border-slate-100">
                             <h4 class="text-xs font-bold text-slate-600 mb-2">سجل الأحداث الأخيرة للسحابة:</h4>
                             <div id="live-scan-log" class="text-[11px] font-mono text-slate-500 space-y-1 max-h-[140px] overflow-y-auto bg-slate-50 p-2 rounded-lg border border-slate-100">
@@ -357,7 +361,6 @@
                             </div>
                             <p class="text-slate-400 text-xs mb-4">هذه القائمة تستعرض الطرود المتبقية التي لم يتم إسكانها من أي موظف حتى الآن</p>
                             
-                            <!-- قائمة متبقي الأوردرات المعلقة -->
                             <div id="missing-orders-list" class="space-y-1.5 max-h-[250px] overflow-y-auto">
                                 <div class="text-center text-slate-400 py-6 text-xs">لا يوجد أوردرات معلقة حالياً.</div>
                             </div>
@@ -407,7 +410,6 @@
                             </div>
                         </div>
 
-                        <!-- كبس الزر الرئيسي لتوليد ملف الـ PDF -->
                         <button onclick="generatePDFReport()" class="w-full bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-700 hover:to-amber-700 text-white font-extrabold py-4 px-6 rounded-2xl text-base flex items-center justify-center gap-2.5 shadow-md shadow-rose-100 transition-all active:scale-98">
                             <i data-lucide="file-check-2" class="w-5 h-5"></i> تحميل تقرير ومستند التسليم النهائي (PDF)
                         </button>
@@ -425,26 +427,29 @@
         <div>جميع الحقوق محفوظة © <span class="font-extrabold tracking-wider text-rose-600">KOREAN BEAUTYS</span> ٢٠٢٦</div>
     </footer>
 
-    <!-- ================= الـ PDF المصمم للطباعة الفائقة (مخفي برمجياً ويستخدم للتوليد) ================= -->
+    <!-- ================= الـ PDF المصمم للطباعة الفائقة ================= -->
     <div id="pdf-template-wrapper" class="hidden">
         <div id="pdf-document" class="p-8 bg-white text-slate-800 w-[794px] min-h-[1123px] text-right text-xs leading-normal relative space-y-8" style="direction: rtl;">
-            
-            <!-- 📄 الصفحة الأولى: تقرير الحالة الداخلي لـ Korean Beautys -->
             <div class="pdf-page relative min-h-[1050px] flex flex-col justify-between">
                 <div>
-                    <!-- ترويسة الصفحة الأولى الفاخرة -->
+                    <!-- ترويسة الصفحة الأولى الفاخرة المدمج بها اللوجو الصوري المميز -->
                     <div class="flex justify-between items-center border-b-2 border-rose-600 pb-4">
-                        <div>
-                            <h1 class="text-2xl font-black text-rose-700 tracking-wide">KOREAN BEAUTYS</h1>
-                            <p class="text-[10px] text-slate-500 font-bold mt-1">تقرير جرد الشحنات والوردية الداخلي لليوم</p>
+                        <div class="flex items-center gap-4">
+                            <!-- 🆕 حقن صورة اللوجو الحقيقي المرفوع على مستودع GitHub بجودة فائقة 🆕 -->
+                            <img src="logo.png" alt="Korean Beautys Logo" class="w-20 h-20 object-contain rounded-xl border border-slate-100 shadow-sm" onerror="this.style.display='none'; document.getElementById('pdf-text-logo').classList.remove('hidden');">
+                            <div id="pdf-text-logo" class="hidden">
+                                <h1 class="text-2xl font-black text-rose-700 tracking-wide">KOREAN BEAUTYS</h1>
+                            </div>
+                            <div class="mr-2">
+                                <h2 class="text-lg font-black text-slate-800 tracking-wide">KOREAN BEAUTYS LOGISTICS</h2>
+                                <p class="text-[10px] text-slate-500 font-bold mt-0.5">تقرير جرد الشحنات والوردية الداخلي لليوم</p>
+                            </div>
                         </div>
                         <div class="text-left text-[10px] text-slate-500 space-y-1">
                             <p><strong>التاريخ:</strong> <span id="pdf-date">15-12-2026</span></p>
                             <p><strong>وقت الإغلاق:</strong> <span id="pdf-time">04:30 م</span></p>
                         </div>
                     </div>
-
-                    <!-- الملخص العددي للوردية -->
                     <div class="grid grid-cols-3 gap-4 my-6 text-center">
                         <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
                             <span class="text-slate-500 block text-[9px] font-bold">إجمالي طرود الوردية</span>
@@ -459,8 +464,6 @@
                             <span id="pdf-summary-missing" class="text-xl font-extrabold text-rose-700">15</span>
                         </div>
                     </div>
-
-                    <!-- جدول جرد التفاصيل بالكامل لكافة أوردرات اليوم -->
                     <div>
                         <h3 class="text-xs font-black text-slate-700 mb-2 flex items-center gap-1">📋 جرد وتصنيف كافة الأوردرات (جرد داخلي)</h3>
                         <table class="w-full text-right border-collapse text-[10px]">
@@ -474,54 +477,42 @@
                                     <th class="p-2 border border-slate-200">توقيت مسح الكرتونة</th>
                                 </tr>
                             </thead>
-                            <tbody id="pdf-full-table-body" class="divide-y divide-slate-100">
-                                <!-- تملأ برمجياً بقائمة الأوردرات بالكامل -->
-                            </tbody>
+                            <tbody id="pdf-full-table-body" class="divide-y divide-slate-100"></tbody>
                         </table>
                     </div>
                 </div>
-
-                <!-- تذييل الصفحة الأولى -->
                 <div class="border-t border-slate-100 pt-3 text-[9px] text-slate-400 text-center flex justify-between">
                     <span>Korean Beautys Logistics System</span>
                     <span>الصفحة 1 من 2</span>
                 </div>
             </div>
-
-            <!-- فاصل صفحات إجباري لـ html2pdf -->
             <div class="html2pdf__page-break"></div>
-
-            <!-- 📄 الصفحة الثانية: إيصال تسليم المندوب الرسمي (The Delivery Manifest) -->
             <div class="pdf-page relative min-h-[1050px] flex flex-col justify-between">
                 <div>
-                    <!-- ترويسة الصفحة الثانية -->
                     <div class="flex justify-between items-center border-b-2 border-rose-600 pb-4">
-                        <div>
-                            <h1 class="text-2xl font-black text-rose-700 tracking-wide">KOREAN BEAUTYS</h1>
-                            <p class="text-[10px] text-slate-500 font-bold mt-1">إيصال رسمي بتسليم أوردرات لمندوب الشحن (Manifest)</p>
+                        <div class="flex items-center gap-3">
+                            <img src="logo.png" alt="Korean Beautys Logo" class="w-14 h-14 object-contain" onerror="this.style.display='none';">
+                            <div>
+                                <h1 class="text-xl font-black text-rose-700 tracking-wide">KOREAN BEAUTYS</h1>
+                                <p class="text-[10px] text-slate-500 font-bold mt-0.5">إيصال رسمي بتسليم أوردرات لمندوب الشحن (Manifest)</p>
+                            </div>
                         </div>
                         <div class="text-left text-[10px] text-slate-500 space-y-1">
                             <p><strong>التاريخ:</strong> <span id="pdf-manifest-date">15-12-2026</span></p>
                             <p><strong>مستند تسليم رقم:</strong> <span id="pdf-manifest-num">KB-MANIFEST-4921</span></p>
                         </div>
                     </div>
-
-                    <!-- صيغة الإقرار القانوني الرسمي والذكي -->
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 my-5 text-[11px] leading-relaxed text-slate-700">
                         نقر نحن إدارة شحن ومستودعات <strong class="text-rose-700 font-extrabold">Korean Beautys</strong> بأنه في يوم 
                         <span id="pdf-manifest-day-text" class="font-bold underline">الأحد</span> الموافق 
-                        <span id="pdf-manifest-date-text" class="font-bold underline">15-12-2026</span>، قد تم تسليم المندوب الموضح اسمه وتفاصيله أدناه طروداً وأوردرات مغلفة ومغلقة بالكامل عددها الإجمالي 
+                        <span id="pdf-manifest-date-text" class="font-bold underline">15-12-2026</span>، قد تم تسليم المندوب الموضح اسمه وتفاصيله أدناه طروساً وأوردرات مغلفة ومغلقة بالكامل عددها الإجمالي 
                         (<span id="pdf-manifest-count-num" class="font-bold text-rose-600">215</span>) طرداً فقط لا غير، وبناءً عليه جرى توقيع هذا الإيصال الرسمي للاعتماد المتبادل.
                     </div>
-
-                    <!-- تفاصيل المندوب المستلم -->
                     <div class="grid grid-cols-3 gap-4 mb-5 p-3 rounded-lg border border-slate-100 text-[10px] bg-white">
                         <p><strong>المندوب المستلم:</strong> <span id="pdf-manifest-courier-name">-</span></p>
                         <p><strong>رقم الهوية:</strong> <span id="pdf-manifest-courier-id">-</span></p>
-                        <p><strong>رقم لوحة المركبة:</strong> <span id="pdf-manifest-car-plate">-</span></p>
+                        <p><strong>رقم لوحة المركبة:</strong> <span id="pdf-car-plate-output">-</span></p>
                     </div>
-
-                    <!-- جدول الأوردرات المفلترة (المشحونة والمسلمة فعلياً فقط) -->
                     <div>
                         <h3 class="text-xs font-black text-emerald-700 mb-2 flex items-center gap-1">🚚 الطرود المسلمة والمدرجة تحت مسؤولية الناقل</h3>
                         <table class="w-full text-right border-collapse text-[10px]">
@@ -535,14 +526,10 @@
                                     <th class="p-2 border border-slate-200">وقت التحميل والتأكيد</th>
                                 </tr>
                             </thead>
-                            <tbody id="pdf-filtered-table-body" class="divide-y divide-slate-100">
-                                <!-- تملأ برمجياً بالأوردرات المشحونة فقط -->
-                            </tbody>
+                            <tbody id="pdf-filtered-table-body" class="divide-y divide-slate-100"></tbody>
                         </table>
                     </div>
                 </div>
-
-                <!-- قسم التوقيعات الثنائي المحمي منسق أسفل الصفحة -->
                 <div>
                     <div class="grid grid-cols-2 gap-8 pt-8 pb-4 border-t border-slate-200 mt-6">
                         <div class="space-y-12">
@@ -550,29 +537,22 @@
                                 <p class="font-extrabold text-slate-800 text-xs">مسؤول مستودع كوريان بيوتيز</p>
                                 <p class="text-[9px] text-slate-400">الاسم والتوقيع الرسمي</p>
                             </div>
-                            <div class="border-b border-dashed border-slate-300 w-3/4 mx-auto pt-6 text-center text-[10px] text-slate-300">
-                                توقيع واعتماد المستودع
-                            </div>
+                            <div class="border-b border-dashed border-slate-300 w-3/4 mx-auto pt-6 text-center text-[10px] text-slate-300">توقيع واعتماد المستودع</div>
                         </div>
                         <div class="space-y-12">
                             <div class="text-center">
                                 <p class="font-extrabold text-slate-800 text-xs">مندوب شركة الشحن المستلم</p>
                                 <p class="text-[9px] text-slate-400">التوقيع وبصمة الاستلام</p>
                             </div>
-                            <div class="border-b border-dashed border-slate-300 w-3/4 mx-auto pt-6 text-center text-[10px] text-slate-300">
-                                توقيع وبصمة المندوب
-                            </div>
+                            <div class="border-b border-dashed border-slate-300 w-3/4 mx-auto pt-6 text-center text-[10px] text-slate-300">توقيع وبصمة المندوب</div>
                         </div>
                     </div>
-
-                    <!-- تذييل الصفحة الثانية -->
                     <div class="border-t border-slate-100 pt-3 text-[9px] text-slate-400 text-center flex justify-between">
                         <span>Korean Beautys Logistics System</span>
                         <span>الصفحة 2 من 2</span>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -590,18 +570,13 @@
             measurementId: "G-SM1ME3PFD3"
         };
 
-        // متغيرات الاتصال السحابية العامة المأمنة
         let database = null;
-        let connectedRef = null;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'korean-beautys-dispatch';
-
         let orders = [];
         let workerName = "عامل المخزن";
 
-        // دالة تهيئة الفايربيز بشكل آمن لتفادي الـ Global Script Error في حالة حظر مكاتب gstatic أو انقطاع الشبكة
         function initFirebase() {
             if (typeof firebase === 'undefined') {
-                console.error("Firebase library is not loaded yet.");
                 document.getElementById('cloud-status-text').textContent = "خطأ: لم يتم تحميل مكتبة Firebase";
                 document.getElementById('cloud-pulse').className = "w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse";
                 return false;
@@ -611,30 +586,20 @@
                 database = firebase.database();
                 return true;
             } catch (e) {
-                console.error("Firebase initialization failed:", e);
                 return false;
             }
         }
 
-        // دالة آمنة لاستدعاء مكتبة Lucide وحمايتها من أخطاء الـ CDN
         function createIconsSafe() {
             try {
-                if (typeof lucide !== 'undefined' && lucide.createIcons) {
-                    lucide.createIcons();
-                }
-            } catch (e) {
-                console.warn("Lucide icons failed to render:", e);
-            }
+                if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+            } catch (e) {}
         }
 
-        // --- 2. إدارة ملفات تعريف الموظف النشط وتعديل اسمه ---
         window.addEventListener('DOMContentLoaded', () => {
             createIconsSafe();
-            
-            // تهيئة الفايربيز والبدء بالاستماع للحالة
             if (initFirebase()) {
-                const connectedRef = database.ref(".info/connected");
-                connectedRef.on("value", (snap) => {
+                database.ref(".info/connected").on("value", (snap) => {
                     if (snap.val() === true) {
                         document.getElementById('cloud-status-text').textContent = "متصل بالسحابة ومتزامن مع الأجهزة الأخرى";
                         document.getElementById('cloud-pulse').className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
@@ -644,12 +609,9 @@
                         document.getElementById('cloud-pulse').className = "w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse";
                     }
                 });
-
-                // تفعيل مستمع التحديث اللحظي للبيانات لجميع المتصلين
                 setupRealtimeSync();
             }
             
-            // تهيئة واسترجاع اسم العامل من الذاكرة المحلية أو توليد واحد تلقائي
             let savedName = localStorage.getItem('kb_worker_name');
             if (!savedName) {
                 savedName = 'عامل-' + Math.floor(100 + Math.random() * 900);
@@ -657,12 +619,9 @@
             }
             workerName = savedName;
             document.getElementById('worker-name-input').value = workerName;
-
-            // كشف الكاميرات المتاحة
             detectCameras();
         });
 
-        // حفظ الاسم الجديد للـ Worker ومزامنته محلياً
         function saveWorkerName(name) {
             const cleanName = name.trim();
             if (cleanName) {
@@ -672,583 +631,236 @@
             }
         }
 
-        // --- 3. قراءة التحديثات المتزامنة فورياً لجميع الموظفين ---
         function setupRealtimeSync() {
             if (!database) return;
-            const ordersRef = database.ref(`artifacts/${appId}/orders`);
-            
-            ordersRef.on('value', (snapshot) => {
+            database.ref(`artifacts/${appId}/orders`).on('value', (snapshot) => {
                 const val = snapshot.val();
-                if (val) {
-                    orders = Object.values(val);
-                } else {
-                    orders = [];
-                }
+                orders = val ? Object.values(val) : [];
                 updateStats();
                 renderOrdersTable();
                 updateMissingList();
-            }, (error) => {
-                console.error("Database sync error:", error);
-                showNotification("فشل تحديث البيانات من السحابة اللحظية.", "error");
             });
         }
 
-        // تحديث مربعات العدادات اللحظية على الأجهزة المتصلة
         function updateStats() {
             const total = orders.length;
             const shipped = orders.filter(o => o.status === 'Shipped').length;
             const pending = total - shipped;
-
             document.getElementById('stat-total').textContent = total;
             document.getElementById('stat-shipped').textContent = shipped;
             document.getElementById('stat-pending').textContent = pending;
-
-            // العداد العائم أسفل الكاميرا
             document.getElementById('scanner-count').textContent = shipped;
             document.getElementById('badge-missing-count').textContent = `${pending} طرد متبقي`;
         }
 
-        // عرض وتصفية جدول الأوردرات المرفوعة
         function renderOrdersTable() {
             const tbody = document.getElementById('orders-table-body');
             tbody.innerHTML = '';
-
             if (orders.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="p-8 text-center text-slate-400">
-                            <div class="flex flex-col items-center justify-center gap-2">
-                                <i data-lucide="cloud-off" class="w-8 h-8 opacity-60"></i>
-                                <span>في انتظار الرفع السحابي لليوم.. قم بسحب الشيت في اليمين للبدء.</span>
-                            </div>
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400"><div class="flex flex-col items-center justify-center gap-2"><i data-lucide="cloud-off" class="w-8 h-8 opacity-60"></i><span>في انتظار الرفع السحابي لليوم..</span></div></td></tr>`;
                 createIconsSafe();
                 return;
             }
-
-            // فرز الأوردرات لعرض الأحدث مسحاً في الأعلى دائماً
-            const sortedOrders = [...orders].sort((a, b) => {
-                if (a.scanTime && !b.scanTime) return -1;
-                if (!a.scanTime && b.scanTime) return 1;
-                if (a.scanTime && b.scanTime) {
-                    return b.scanTime.localeCompare(a.scanTime);
-                }
-                return 0;
-            });
-
+            const sortedOrders = [...orders].sort((a, b) => (b.scanTime || '').localeCompare(a.scanTime || ''));
             sortedOrders.forEach(order => {
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition-colors duration-150";
-                
                 const statusBadge = order.status === 'Shipped' 
                     ? `<span class="bg-emerald-100 text-emerald-800 text-[11px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 justify-center w-max"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>تم الشحن</span>`
                     : `<span class="bg-amber-100 text-amber-800 text-[11px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1 justify-center w-max"><span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>معلق</span>`;
-
-                tr.innerHTML = `
-                    <td class="p-3 font-bold text-slate-700">${order.orderId}</td>
-                    <td class="p-3 font-mono text-slate-600">${order.trackingNumber}</td>
-                    <td class="p-3">${statusBadge}</td>
-                    <td class="p-3 text-slate-600 font-bold text-xs">${order.scannedBy || '—'}</td>
-                    <td class="p-3 text-slate-400 font-mono text-xs">${order.scanTime || '—'}</td>
-                `;
+                tr.innerHTML = `<td class="p-3 font-bold text-slate-700">${order.orderId}</td><td class="p-3 font-mono text-slate-600">${order.trackingNumber}</td><td class="p-3">${statusBadge}</td><td class="p-3 text-slate-600 font-bold text-xs">${order.scannedBy || '—'}</td><td class="p-3 text-slate-400 font-mono text-xs">${order.scanTime || '—'}</td>`;
                 tbody.appendChild(tr);
             });
             createIconsSafe();
         }
 
-        // تفريغ وتصفية النواقص
         function updateMissingList() {
             const listContainer = document.getElementById('missing-orders-list');
             listContainer.innerHTML = '';
-
             const missing = orders.filter(o => o.status === 'Pending');
-
             if (missing.length === 0) {
-                listContainer.innerHTML = `
-                    <div class="text-center text-emerald-600 py-6 text-xs bg-emerald-50 rounded-xl border border-emerald-100">
-                        ✨ عظيم! تم إسكان كافة الكراتين بنجاح ولا يوجد نواقص لليوم.
-                    </div>
-                `;
+                listContainer.innerHTML = `<div class="text-center text-emerald-600 py-6 text-xs bg-emerald-50 rounded-xl border border-emerald-100">✨ تم إسكان كافة الكراتين بنجاح!</div>`;
                 return;
             }
-
             missing.forEach(item => {
                 const div = document.createElement('div');
                 div.className = "bg-rose-50 border border-rose-100/60 p-2.5 rounded-xl flex items-center justify-between text-xs";
-                div.innerHTML = `
-                    <div>
-                        <p class="font-extrabold text-slate-700">${item.orderId}</p>
-                        <p class="font-mono text-slate-400 text-[10px] mt-0.5">التتبع: ${item.trackingNumber}</p>
-                    </div>
-                    <span class="text-rose-600 font-extrabold flex items-center gap-1">
-                        <i data-lucide="clock" class="w-3.5 h-3.5 animate-spin"></i> متبقي
-                    </span>
-                `;
+                div.innerHTML = `<div><p class="font-extrabold text-slate-700">${item.orderId}</p><p class="font-mono text-slate-400 text-[10px] mt-0.5">التتبع: ${item.trackingNumber}</p></div><span class="text-rose-600 font-extrabold flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 animate-spin"></i> متبقي</span>`;
                 listContainer.appendChild(div);
             });
             createIconsSafe();
         }
 
-
-        // --- 4. رفع ومعالجة شيت البيانات لجميع الأجهزة (دعم Excel و CSV) ---
         async function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const loader = document.createElement('div');
             loader.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center text-white text-lg font-bold";
-            loader.innerHTML = `
-                <div class="bg-white text-slate-800 p-6 rounded-2xl flex flex-col items-center gap-4 shadow-xl">
-                    <div class="w-10 h-10 border-4 border-rose-600 border-t-transparent rounded-full animate-spin"></div>
-                    <p>جاري تحليل وتجهيز ملف الشحنة...</p>
-                </div>
-            `;
+            loader.innerHTML = `<div class="bg-white text-slate-800 p-6 rounded-2xl flex flex-col items-center gap-4 shadow-xl"><div class="w-10 h-10 border-4 border-rose-600 border-t-transparent rounded-full animate-spin"></div><p>جاري جلب البيانات...</p></div>`;
             document.body.appendChild(loader);
-
-            if (typeof XLSX === 'undefined') {
-                loader.remove();
-                showNotification("مكتبة قراءة ملفات Excel غير متوفرة بعد، يرجى مراجعة اتصال الإنترنت.", "error");
-                return;
-            }
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, {type: 'array'});
-                    
-                    if (workbook.SheetNames.length === 0) {
-                        loader.remove();
-                        showNotification("الملف المرفوع فارغ ولا يحتوي على أي صفحات.", "error");
-                        return;
-                    }
-
                     const firstSheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[firstSheetName];
-                    
-                    // تحويل الشيت لصفوف برمجية مرنة
                     const rows = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+                    let hIdx = rows.findIndex(r => r && r.filter(c => c).length >= 2);
+                    const mapping = findColumns(rows[hIdx]);
                     
-                    if (rows.length < 2) {
-                        loader.remove();
-                        showNotification("الملف يحتوي على عدد صفوف غير كافٍ.", "error");
-                        return;
-                    }
-
-                    // البحث عن صف العناوين الأول الفعلي غير الفارغ
-                    let hIdx = -1;
-                    for (let i = 0; i < rows.length; i++) {
-                        if (rows[i] && rows[i].filter(cell => cell !== null && cell !== undefined && String(cell).trim() !== '').length >= 2) {
-                            hIdx = i;
-                            break;
-                        }
-                    }
-
-                    if (hIdx === -1) {
-                        loader.remove();
-                        showNotification("لم نتمكن من العثور على صف العناوين بالملف.", "error");
-                        return;
-                    }
-
-                    const headers = rows[hIdx];
-                    const mapping = findColumns(headers);
-
-                    if (mapping.orderIdColIdx === -1 || mapping.trackingColIdx === -1) {
-                        loader.remove();
-                        showNotification("فشل التعرف التلقائي على الأعمدة. تأكد من مسميات أعمدة (رقم الأوردر / رقم التتبع) بالشيت.", "error");
-                        return;
-                    }
-
                     const parsedOrders = {};
                     let count = 0;
-
                     for (let i = hIdx + 1; i < rows.length; i++) {
                         const row = rows[i];
-                        if (!row || row.length === 0) continue;
-
-                        const orderIdRaw = row[mapping.orderIdColIdx];
-                        const trackingNumberRaw = row[mapping.trackingColIdx];
-
-                        if (orderIdRaw !== undefined && orderIdRaw !== null && trackingNumberRaw !== undefined && trackingNumberRaw !== null) {
-                            const orderId = String(orderIdRaw).trim();
-                            const trackingNumber = String(trackingNumberRaw).trim();
-
-                            if (orderId && trackingNumber) {
-                                parsedOrders[trackingNumber] = {
-                                    orderId: orderId,
-                                    trackingNumber: trackingNumber,
-                                    status: 'Pending',
-                                    scanTime: null,
-                                    scannedBy: null
-                                };
-                                count++;
-                            }
+                        if (row && row[mapping.orderIdColIdx] && row[mapping.trackingColIdx]) {
+                            const orderId = String(row[mapping.orderIdColIdx]).trim();
+                            const trackingNumber = String(row[mapping.trackingColIdx]).trim();
+                            parsedOrders[trackingNumber] = { orderId, trackingNumber, status: 'Pending', scanTime: null, scannedBy: null };
+                            count++;
                         }
                     }
-
                     loader.remove();
-
-                    if (count > 0) {
-                        uploadToRealtimeDatabase(parsedOrders, count);
-                    } else {
-                        showNotification("لم نتمكن من استخراج أي بيانات أوردرات صالحة من الملف.", "error");
-                    }
-                } catch (error) {
-                    console.error("Error reading file:", error);
-                    loader.remove();
-                    showNotification("حدث خطأ ما أثناء قراءة وتجهيز الملف.", "error");
-                }
+                    if (count > 0) uploadToRealtimeDatabase(parsedOrders, count);
+                } catch (error) { loader.remove(); }
             };
-
-            reader.onerror = function() {
-                loader.remove();
-                showNotification("حدث خطأ أثناء تحميل الملف من الذاكرة.", "error");
-            };
-
             reader.readAsArrayBuffer(file);
         }
 
-        // الذكاء الاصطناعي لتمييز وتحديد الأعمدة تلقائياً
         function findColumns(headers) {
-            let orderIdColIdx = -1;
-            let trackingColIdx = -1;
-
-            // تطبيع مسميات الأعمدة: تنظيف المسافات وتحويل الحروف لصغيرة
-            const normHeaders = headers.map(h => h ? String(h).trim().toLowerCase() : "");
-
-            // 1. تجربة البحث عن تطابقات صريحة وقوية أولاً
-            const strongOrderId = ['order_id', 'order id', 'رقم الأوردر', 'رقم الاوردر', 'رقم الطلب', 'مسلسل الأوردر', 'مسلسل الاوردر', 'order_no', 'order no', 'id'];
-            const strongTracking = ['tracking_number', 'tracking number', 'tracking_by', 'tracking_no', 'tracking no', 'waybill', 'airwaybill', 'بوليصة الشحن', 'رقم الشحن', 'شركة الشحن', 'رقم التتبع', 'رقم تتبع', 'البوليصة', 'بوليصة'];
-
-            for (let i = 0; i < normHeaders.length; i++) {
-                const h = normHeaders[i];
-                if (strongOrderId.includes(h)) {
-                    orderIdColIdx = i;
-                }
-                if (strongTracking.includes(h)) {
-                    trackingColIdx = i;
-                }
-            }
-
-            // 2. الفولباك للبحث بكلمات جزئية ضعيفة في حال عدم العثور على تطابق صريح
-            const weakOrderId = ['order', 'id', 'رقم', 'أوردر', 'اوردر', 'مسلسل', 'الطلب'];
-            const weakTracking = ['tracking', 'waybill', 'airwaybill', 'البوليصة', 'التتبع', 'بوليصة', 'تتبع', 'شحن'];
-
-            if (orderIdColIdx === -1) {
-                for (let i = 0; i < normHeaders.length; i++) {
-                    const h = normHeaders[i];
-                    if (weakOrderId.some(keyword => h.includes(keyword)) && i !== trackingColIdx) {
-                        orderIdColIdx = i;
-                        break;
-                    }
-                }
-            }
-
-            if (trackingColIdx === -1) {
-                for (let i = 0; i < normHeaders.length; i++) {
-                    const h = normHeaders[i];
-                    if (weakTracking.some(keyword => h.includes(keyword)) && i !== orderIdColIdx) {
-                        trackingColIdx = i;
-                        break;
-                    }
-                }
-            }
-
+            let orderIdColIdx = headers.findIndex(h => ['order_id', 'order id', 'رقم الأوردر', 'رقم الاوردر', 'رقم الطلب', 'id'].includes(String(h).trim().toLowerCase()));
+            let trackingColIdx = headers.findIndex(h => ['tracking_number', 'tracking number', 'waybill', 'بوليصة الشحن', 'رقم الشحن', 'رقم التتبع'].includes(String(h).trim().toLowerCase()));
+            if (orderIdColIdx === -1) orderIdColIdx = 0;
+            if (trackingColIdx === -1) trackingColIdx = 1;
             return { orderIdColIdx, trackingColIdx };
         }
 
         async function uploadToRealtimeDatabase(ordersMap, size) {
-            const loader = document.createElement('div');
-            loader.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center text-white text-lg font-bold";
-            loader.innerHTML = `
-                <div class="bg-white text-slate-800 p-6 rounded-2xl flex flex-col items-center gap-4 shadow-xl">
-                    <div class="w-10 h-10 border-4 border-rose-600 border-t-transparent rounded-full animate-spin"></div>
-                    <p>جاري رفع وتثبيت ${size} أوردر على السحابة...</p>
-                </div>
-            `;
-            document.body.appendChild(loader);
+            if (!database) return;
+            await database.ref(`artifacts/${appId}/orders`).update(ordersMap);
+            showNotification(`تم بنجاح رفع ${size} أوردر سحابياً!`);
+        }
+
+        // 🆕 دالة إضافة أوردر فردي يدوياً للسحابة مباشرة 🆕
+        async function addSingleManualOrder() {
+            const orderIdInput = document.getElementById('manual-order-id');
+            const trackingInput = document.getElementById('manual-tracking-num');
+            
+            const orderId = orderIdInput.value.trim();
+            const trackingNumber = trackingInput.value.trim();
+
+            if (!orderId || !trackingNumber) {
+                alert("برجاء إدخال رقم الأوردر ورقم التتبع معاً!");
+                return;
+            }
+
+            if (!database) {
+                alert("قاعدة البيانات غير متصلة حالياً!");
+                return;
+            }
+
+            const singleOrder = {};
+            singleOrder[trackingNumber] = {
+                orderId: orderId,
+                trackingNumber: trackingNumber,
+                status: 'Pending',
+                scanTime: null,
+                scannedBy: null
+            };
 
             try {
-                if (!database) {
-                    showNotification("قاعدة البيانات غير متصلة.", "error");
-                    loader.remove();
-                    return;
-                }
-                // حفظ كافة البيانات بمستودع اليوم بالـ Realtime Database
-                await database.ref(`artifacts/${appId}/orders`).set(ordersMap);
-                loader.remove();
-                showNotification(`تم بنجاح رفع وتأسيس ${size} أوردر سحابياً لجميع الأجهزة!`);
+                await database.ref(`artifacts/${appId}/orders`).update(singleOrder);
+                showNotification(`✓ تم إضافة الأوردر ${orderId} يدوياً بنجاح!`);
+                // تفريغ الحقول للاستعداد للقادم
+                orderIdInput.value = '';
+                trackingInput.value = '';
             } catch (error) {
-                console.error("Upload failed", error);
-                loader.remove();
-                showNotification("فشل دفع وتأسيس البيانات السحابية.", "error");
+                alert("فشل إضافة الأوردر السحابي.");
             }
         }
 
-        // تصفير وتنظيف السحابة لبدء الوردية التالية
         async function clearAllOrders() {
-            const confirmModal = document.createElement('div');
-            confirmModal.className = "fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 text-right";
-            confirmModal.innerHTML = `
-                <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
-                    <h3 class="text-lg font-extrabold text-slate-800">⚠️ تأكيد تصفير ومسح السحابة</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">
-                        هل أنت متأكد من مسح كافة أوردرات اليوم من السحابة؟ هذا الإجراء سيقوم بتصفير العدادات والبيانات لدى **جميع موظفي المخزن على كافة الهواتف** فوراً لتأسيس شحنة جديدة.
-                    </p>
-                    <div class="flex gap-3 justify-end pt-2">
-                        <button id="cancel-clear-btn" class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50">إلغاء</button>
-                        <button id="confirm-clear-btn" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold">تأكيد المسح الكلي</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(confirmModal);
-
-            document.getElementById('cancel-clear-btn').onclick = () => confirmModal.remove();
-            document.getElementById('confirm-clear-btn').onclick = async () => {
-                confirmModal.remove();
-                const loader = document.createElement('div');
-                loader.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center text-white text-lg font-bold";
-                loader.innerHTML = `
-                    <div class="bg-white text-slate-800 p-6 rounded-2xl flex flex-col items-center gap-4 shadow-xl">
-                        <div class="w-10 h-10 border-4 border-rose-600 border-t-transparent rounded-full animate-spin"></div>
-                        <p>جاري مسح السحابة للوردية الجديدة...</p>
-                    </div>
-                `;
-                document.body.appendChild(loader);
-
-                try {
-                    if (!database) {
-                        showNotification("قاعدة البيانات غير متصلة.", "error");
-                        loader.remove();
-                        return;
-                    }
-                    await database.ref(`artifacts/${appId}/orders`).remove();
-                    loader.remove();
-                    showNotification("تم تصفير وإفراغ السحابة للوردية بنجاح!");
-                } catch (error) {
-                    console.error("Clear error:", error);
-                    loader.remove();
-                    showNotification("فشل إتمام عملية التصفير السحابي.", "error");
-                }
-            };
+            if (!database || !confirm("مسح السحابة الكلي؟")) return;
+            await database.ref(`artifacts/${appId}/orders`).remove();
+            showNotification("تم تصفير السحابة.");
         }
 
-
-        // --- 5. معالجة وتفقد الباركود سحابياً والسيناريوهات الثلاثة ---
         let html5QrCode = null;
         let activeCameraId = null;
         let isTorchOn = false;
         let scanCooldown = false;
 
         function startScanning() {
-            if (typeof Html5Qrcode === 'undefined') {
-                showNotification("مكتبة الماسح الضوئي غير جاهزة بعد.", "error");
-                return;
-            }
             if (html5QrCode && html5QrCode.isScanning) return;
-
             html5QrCode = new Html5Qrcode("reader");
-            const config = { 
-                fps: 20, 
-                qrbox: { width: 250, height: 180 },
-                aspectRatio: 1.333
-            };
-
-            const cameraId = activeCameraId || { facingMode: "environment" };
-
-            html5QrCode.start(cameraId, config, (text) => {
-                if (scanCooldown) return;
-                processBarcode(text);
-            }, () => {}).catch(err => {
-                console.error("Failed to start scanner:", err);
-            });
+            html5QrCode.start(activeCameraId || { facingMode: "environment" }, { fps: 20, qrbox: { width: 250, height: 180 } }, (text) => {
+                if (!scanCooldown) processBarcode(text);
+            }, () => {});
         }
 
-        function stopScanning() {
-            if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.stop().catch(err => console.error(err));
-            }
-        }
-
-        function restartScannerWithSelectedCamera() {
-            const select = document.getElementById('camera-select');
-            if (select.value) {
-                activeCameraId = select.value;
-                if (html5QrCode && html5QrCode.isScanning) {
-                    html5QrCode.stop().then(() => startScanning());
-                } else {
-                    startScanning();
-                }
-            }
-        }
-
-        function toggleTorch() {
-            if (html5QrCode && html5QrCode.isScanning) {
-                isTorchOn = !isTorchOn;
-                html5QrCode.applyVideoConstraints({
-                    advanced: [{ torch: isTorchOn }]
-                }).then(() => {
-                    const btn = document.getElementById('torch-btn');
-                    btn.className = isTorchOn 
-                        ? "bg-amber-500 hover:bg-amber-600 text-white p-2.5 rounded-xl transition-all duration-150 relative group"
-                        : "bg-slate-100 hover:bg-slate-200 text-slate-700 p-2.5 rounded-xl transition-all duration-150 relative group";
-                }).catch(() => {
-                    showNotification("الكشاف غير مدعوم على هذه العدسة أو الجهاز.", "error");
-                });
-            } else {
-                showNotification("يرجى تشغيل الكاميرا أولاً لتفعيل الكشاف.", "error");
-            }
-        }
+        function stopScanning() { if (html5QrCode && html5QrCode.isScanning) html5QrCode.stop(); }
+        function restartScannerWithSelectedCamera() { activeCameraId = document.getElementById('camera-select').value; stopScanning(); startScanning(); }
+        function toggleTorch() { if (html5QrCode && html5QrCode.isScanning) { isTorchOn = !isTorchOn; html5QrCode.applyVideoConstraints({ advanced: [{ torch: isTorchOn }] }); } }
 
         async function processBarcode(barcode) {
             barcode = barcode.trim();
             if (!barcode) return;
 
-            // فحص وجود الباركود بذاكرة السحابة المحلية
-            // ندعم البحث بـ Tracking_Number أو بـ Order_ID لمرونة تامة
-            const orderIndex = orders.findIndex(o => 
-                o.trackingNumber.toLowerCase() === barcode.toLowerCase() || 
-                o.orderId.toLowerCase() === barcode.toLowerCase()
-            );
-
+            const orderIndex = orders.findIndex(o => o.trackingNumber.toLowerCase() === barcode.toLowerCase() || o.orderId.toLowerCase() === barcode.toLowerCase());
             if (orderIndex !== -1) {
                 const targetOrder = orders[orderIndex];
-
-                if (targetOrder.status === 'Shipped') {
-                    // [السيناريو الثاني: أوردر مكرر ومستلم مسبقاً]
-                    triggerDuplicateState(targetOrder);
-                } else {
-                    // [السيناريو الأول: إسكان ناجح لأول مرة]
-                    await triggerSuccessState(targetOrder);
-                }
+                if (targetOrder.status === 'Shipped') triggerDuplicateState(targetOrder);
+                else await triggerSuccessState(targetOrder);
             } else {
-                // [السيناريو الثالث: أوردر خاطئ وغير مسجل بالسيستم]
                 triggerErrorState(barcode);
             }
         }
 
-        // سيناريو الإسكان السحابي الناجح
         async function triggerSuccessState(order) {
             scanCooldown = true;
             const scanTime = getFormattedTimestamp();
-
             try {
-                if (!database) {
-                    showNotification("قاعدة البيانات غير متصلة.", "error");
-                    scanCooldown = false;
-                    return;
-                }
-                // تحديث كائن الأوردر المحدد برقم التتبع على السحابة فوراً
-                await database.ref(`artifacts/${appId}/orders/${order.trackingNumber}`).update({
-                    status: 'Shipped',
-                    scanTime: scanTime,
-                    scannedBy: workerName
-                });
-
-                // المخرجات الصوتية والاهتزاز
+                await database.ref(`artifacts/${appId}/orders/${order.trackingNumber}`).update({ status: 'Shipped', scanTime: scanTime, scannedBy: workerName });
                 playTone(800, 'sine', 150);
                 vibrateDevice([100]);
-
                 const overlay = document.getElementById('overlay-success');
                 document.getElementById('overlay-success-id').textContent = `رقم الأوردر: ${order.orderId}`;
                 overlay.classList.add('overlay-active');
-
-                logScanAction(`✅ تم إسكان: ${order.orderId} بواسطة الموظف (${workerName})`);
-
-                setTimeout(() => {
-                    overlay.classList.remove('overlay-active');
-                    scanCooldown = false;
-                }, 1000);
-            } catch (error) {
-                console.error("Cloud update failed:", error);
-                showNotification("فشل تسجيل الإسكان على قاعدة البيانات اللحظية.", "error");
-                scanCooldown = false;
-            }
+                logScanAction(`✅ تم إسكان: ${order.orderId} بواسطة (${workerName})`);
+                setTimeout(() => { overlay.classList.remove('overlay-active'); scanCooldown = false; }, 1000);
+            } catch (error) { scanCooldown = false; }
         }
 
-        // سيناريو الأوردر المكرر (إطلاق صفارة الإنذار المكرر)
         function triggerDuplicateState(order) {
             scanCooldown = true;
-
-            // تشغيل صوت الإنذار المتأرجح (Siren) للتحذير من التكرار
             playSirenAlarm(0.5); 
-            vibrateDevice([200, 100, 200, 100, 200]);
-
+            vibrateDevice([200, 100, 200]);
             const overlay = document.getElementById('overlay-duplicate');
             overlay.classList.add('overlay-active');
-
-            logScanAction(`⚠️ مكرر: ${order.orderId} تم مسحه مسبقاً بواسطة ${order.scannedBy || 'مجهول'}`);
-
-            setTimeout(() => {
-                overlay.classList.remove('overlay-active');
-                scanCooldown = false;
-            }, 1200);
+            logScanAction(`⚠️ مكرر: ${order.orderId} تم مسحه مسبقاً`);
+            setTimeout(() => { overlay.classList.remove('overlay-active'); scanCooldown = false; }, 1200);
         }
 
-        // سيناريو الأوردر الخاطئ (قفل الأمان المؤقت)
         function triggerErrorState(barcode) {
             scanCooldown = true;
-            
-            if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.pause(); 
-            }
-
+            if (html5QrCode && html5QrCode.isScanning) html5QrCode.pause(); 
             playBuzzSound();
             vibrateDevice([600]);
-
             const overlay = document.getElementById('overlay-error');
             overlay.classList.add('overlay-active');
-
-            logScanAction(`❌ خطأ: باركود غير مدرج بالوردية (${barcode})`);
+            logScanAction(`❌ خطأ: غير مدرج بالوردية (${barcode})`);
         }
 
         function resumeScanningAfterError() {
-            const overlay = document.getElementById('overlay-error');
-            overlay.classList.remove('overlay-active');
-            
-            if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.resume();
-            }
+            document.getElementById('overlay-error').classList.remove('overlay-active');
+            if (html5QrCode && html5QrCode.isScanning) html5QrCode.resume();
             scanCooldown = false;
         }
 
-        function simulateScanAction() {
-            const input = document.getElementById('sim-input');
-            const val = input.value.trim();
-            if (!val) {
-                showNotification("يرجى إدخال قيمة التتبع أولاً للتجربة.", "error");
-                return;
-            }
-            processBarcode(val);
-            input.value = '';
-        }
+        function simulateScanAction() { const input = document.getElementById('sim-input'); processBarcode(input.value); input.value = ''; }
 
-
-        // --- 6. محرك تصدير الـ PDF وإيصال التسليم المفلتر الذكي ---
         function generatePDFReport() {
-            if (orders.length === 0) {
-                showNotification("لا يوجد أي أوردرات مرفوعة على السحابة لتوليد التقرير.", "error");
-                return;
-            }
-
-            const loader = document.createElement('div');
-            loader.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center text-white text-lg font-bold";
-            loader.innerHTML = `
-                <div class="bg-white text-slate-800 p-6 rounded-2xl flex flex-col items-center gap-4 shadow-xl">
-                    <div class="w-10 h-10 border-4 border-rose-600 border-t-transparent rounded-full animate-spin"></div>
-                    <p>جاري تجميع بيانات الأوردرات المتزامنة والطباعة...</p>
-                </div>
-            `;
-            document.body.appendChild(loader);
-
-            if (typeof html2pdf === 'undefined') {
-                loader.remove();
-                showNotification("مكتبة توليد التقارير PDF غير جاهزة بعد.", "error");
-                return;
-            }
-
             const now = new Date();
             const dateStr = now.toLocaleDateString('ar-EG', { year: 'numeric', month: 'numeric', day: 'numeric' });
             const dayName = now.toLocaleDateString('ar-EG', { weekday: 'long' });
@@ -1276,131 +888,71 @@
 
             document.getElementById('pdf-manifest-courier-name').textContent = courierName;
             document.getElementById('pdf-manifest-courier-id').textContent = courierId;
-            document.getElementById('pdf-car-plate').textContent = carPlate;
+            document.getElementById('pdf-car-plate-output').textContent = carPlate;
 
-            // ملء جدول الجرد الكلي
             const fullTbody = document.getElementById('pdf-full-table-body');
             fullTbody.innerHTML = '';
             orders.forEach((o, index) => {
                 const tr = document.createElement('tr');
                 tr.className = "border-b border-slate-100";
-                
-                const badge = o.status === 'Shipped' 
-                    ? `<span style="color:#059669; font-weight:bold;">تم الشحن</span>`
-                    : `<span style="color:#dc2626; font-weight:bold;">لم يشحن</span>`;
-
-                tr.innerHTML = `
-                    <td class="p-1.5 border border-slate-200 text-center">${index + 1}</td>
-                    <td class="p-1.5 border border-slate-200 font-bold">${o.orderId}</td>
-                    <td class="p-1.5 border border-slate-200 font-mono">${o.trackingNumber}</td>
-                    <td class="p-1.5 border border-slate-200 text-center">${badge}</td>
-                    <td class="p-1.5 border border-slate-200 font-mono text-slate-700 text-center">${o.scannedBy || '—'}</td>
-                    <td class="p-1.5 border border-slate-200 font-mono text-slate-500">${o.scanTime || '—'}</td>
-                `;
+                const badge = o.status === 'Shipped' ? `<span style="color:#059669; font-weight:bold;">تم الشحن</span>` : `<span style="color:#dc2626; font-weight:bold;">لم يشحن</span>`;
+                tr.innerHTML = `<td class="p-1.5 border border-slate-200 text-center">${index + 1}</td><td class="p-1.5 border border-slate-200 font-bold">${o.orderId}</td><td class="p-1.5 border border-slate-200 font-mono">${o.trackingNumber}</td><td class="p-1.5 border border-slate-200 text-center">${badge}</td><td class="p-1.5 border border-slate-200 font-mono text-center">${o.scannedBy || '—'}</td><td class="p-1.5 border border-slate-200 font-mono text-slate-500">${o.scanTime || '—'}</td>`;
                 fullTbody.appendChild(tr);
             });
 
-            // ملء جدول تسليم المندوب المفلتر (المشحون فقط)
             const filteredTbody = document.getElementById('pdf-filtered-table-body');
             filteredTbody.innerHTML = '';
             if (shippedList.length === 0) {
-                filteredTbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align:center; padding:20px; color:#94a3b8;">
-                            لا يوجد أي أوردرات مشحونة لتسليمها للمندوب في هذا بيان الشحنات.
-                        </td>
-                    </tr>
-                `;
+                filteredTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:#94a3b8;">لا يوجد أوردرات مشحونة لتسليمها للمندوب.</td></tr>`;
             } else {
                 shippedList.forEach((o, index) => {
                     const tr = document.createElement('tr');
                     tr.className = "border-b border-slate-100";
-                    tr.innerHTML = `
-                        <td class="p-1.5 border border-slate-200 text-center">${index + 1}</td>
-                        <td class="p-1.5 border border-slate-200 font-bold">${o.orderId}</td>
-                        <td class="p-1.5 border border-slate-200 font-mono">${o.trackingNumber}</td>
-                        <td class="p-1.5 border border-slate-200 text-center" style="color:#059669; font-weight:bold;">✓ مُسلم باليد</td>
-                        <td class="p-1.5 border border-slate-200 font-mono text-slate-700 text-center">${o.scannedBy || '—'}</td>
-                        <td class="p-1.5 border border-slate-200 font-mono text-slate-500">${o.scanTime}</td>
-                    `;
+                    tr.innerHTML = `<td class="p-1.5 border border-slate-200 text-center">${index + 1}</td><td class="p-1.5 border border-slate-200 font-bold">${o.orderId}</td><td class="p-1.5 border border-slate-200 font-mono">${o.trackingNumber}</td><td class="p-1.5 border border-slate-200 text-center" style="color:#059669; font-weight:bold;">✓ مُسلم باليد</td><td class="p-1.5 border border-slate-200 font-mono text-center">${o.scannedBy || '—'}</td><td class="p-1.5 border border-slate-200 font-mono text-slate-500">${o.scanTime}</td>`;
                     filteredTbody.appendChild(tr);
                 });
             }
 
-            const pdfArea = document.getElementById('pdf-template-wrapper');
-            pdfArea.classList.remove('hidden');
-
             const element = document.getElementById('pdf-document');
-            const opt = {
-                margin:       0.3,
-                filename:     `Korean_Beautys_Manifest_${dateStr.replace(/\//g, '-')}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
-
-            html2pdf().from(element).set(opt).save().then(() => {
-                pdfArea.classList.add('hidden');
-                loader.remove();
-                showNotification("تم توليد إيصال التسليم والمانيفست السحابي بنجاح!");
-            }).catch(err => {
-                console.error(err);
-                pdfArea.classList.add('hidden');
-                loader.remove();
-                showNotification("حدث خطأ أثناء تصدير مستند الـ PDF.", "error");
+            document.getElementById('pdf-template-wrapper').classList.remove('hidden');
+            
+            html2pdf().from(element).set({ 
+                margin: 0.3, 
+                filename: `Korean_Beautys_Manifest_${dateStr.replace(/\//g, '-')}.pdf`, 
+                image: { type: 'jpeg', quality: 0.98 }, 
+                html2canvas: { scale: 2, useCORS: true }, 
+                jsPDF: { format: 'a4', orientation: 'portrait' } 
+            }).save().then(() => {
+                document.getElementById('pdf-template-wrapper').classList.add('hidden');
+                showNotification("تم توليد المانيفست والـ PDF باللوجو بنجاح!");
             });
         }
 
-
-        // --- 7. خدمات النغمات والاهتزاز والمساعدات الفنية المدمجة ---
-        function vibrateDevice(pattern) {
-            if ('vibrate' in navigator) navigator.vibrate(pattern);
-        }
-
-        let audioCtx = null;
-        function initAudioContext() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-
+        function vibrateDevice(pattern) { if ('vibrate' in navigator) navigator.vibrate(pattern); }
         function playTone(frequency, type, duration) {
             try {
                 initAudioContext();
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                oscillator.type = type;
-                oscillator.frequency.value = frequency;
-                gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                oscillator.start();
-                oscillator.stop(audioCtx.currentTime + (duration / 1000));
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type; osc.frequency.value = frequency;
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + (duration / 1000));
             } catch (e) {}
         }
 
-        // دالة الإنذار المتأرجح المكرر (Alarm Siren)
         function playSirenAlarm(durationSeconds) {
             try {
                 initAudioContext();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-                
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-                
-                // إيجاد نغمة إنذار تتأرجح صعوداً وهبوطاً لشد انتباه العامل فوراً
                 for (let time = 0; time < durationSeconds; time += 0.1) {
-                    const freq = (Math.floor(time * 10) % 2 === 0) ? 750 : 350;
-                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + time);
+                    osc.frequency.setValueAtTime((Math.floor(time * 10) % 2 === 0) ? 750 : 350, audioCtx.currentTime + time);
                 }
-
                 gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + durationSeconds);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                osc.start();
-                osc.stop(audioCtx.currentTime + durationSeconds);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + durationSeconds);
             } catch (e) {}
         }
 
@@ -1409,156 +961,80 @@
                 initAudioContext();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(130, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(70, audioCtx.currentTime + 0.5);
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(130, audioCtx.currentTime);
                 gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.5);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.5);
             } catch (e) {}
         }
 
         function logScanAction(message) {
             const logBox = document.getElementById('live-scan-log');
             const p = document.createElement('p');
-            p.className = "py-1 border-b border-slate-100 last:border-0";
             p.textContent = `[${getFormattedTimestamp()}] ${message}`;
             if (logBox.querySelector('p.italic')) logBox.innerHTML = '';
             logBox.prepend(p);
         }
 
-        // الحصول على الوقت المنسق
-        function getFormattedTimestamp() {
-            const now = new Date();
-            return now.toTimeString().split(' ')[0];
-        }
-
-        // إشعار مستخدم مخصص غير منبثق
-        function showNotification(msg, type = "success") {
+        function getFormattedTimestamp() { return new Date().toTimeString().split(' ')[0]; }
+        function showNotification(msg) {
             const div = document.createElement('div');
-            div.className = `fixed bottom-5 left-5 z-50 p-4 rounded-xl shadow-lg text-sm font-bold text-white transition-all transform translate-y-10 opacity-0 duration-300 ${
-                type === 'error' ? 'bg-rose-600' : 'bg-slate-800'
-            }`;
+            div.className = "fixed bottom-5 left-5 z-50 p-4 bg-slate-800 rounded-xl shadow-lg text-sm font-bold text-white transition-all transform duration-300 animate-bounce";
             div.textContent = msg;
             document.body.appendChild(div);
-            setTimeout(() => div.classList.remove('translate-y-10', 'opacity-0'), 50);
-            setTimeout(() => {
-                div.classList.add('translate-y-10', 'opacity-0');
-                setTimeout(() => div.remove(), 300);
-            }, 3500);
+            setTimeout(() => div.remove(), 3500);
         }
 
-        // كشف الكاميرات المتاحة
         function detectCameras() {
             if (typeof Html5Qrcode === 'undefined') return;
-            Html5Qrcode.getCameras().then(cameras => {
+            Html5Qrcode.getCameras().then(cams => {
                 const select = document.getElementById('camera-select');
                 select.innerHTML = '';
-                if (cameras && cameras.length > 0) {
-                    cameras.forEach((camera, index) => {
-                        const opt = document.createElement('option');
-                        opt.value = camera.id;
-                        opt.textContent = camera.label || `كاميرا ${index + 1}`;
-                        select.appendChild(opt);
-                    });
-                    activeCameraId = cameras[0].id;
-                } else {
-                    select.innerHTML = '<option value="">لا يوجد كاميرا</option>';
-                }
+                cams.forEach((c, i) => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.label || `كاميرا ${i+1}`; select.appendChild(o); });
+                if (cams.length > 0) activeCameraId = cams[0].id;
             }).catch(() => {});
         }
 
-        // تبديل الألسن والتبويبات
         window.switchTab = (tabId) => {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200 text-white hover:bg-white/10";
-            });
-            const activeBtn = document.getElementById(`tab-${tabId}`);
-            if (activeBtn) activeBtn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200 bg-white text-rose-700 shadow-sm";
-            
+            document.querySelectorAll('.tab-btn').forEach(b => b.className = "tab-btn px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200 text-white hover:bg-white/10");
+            document.getElementById(`tab-${tabId}`).className = "tab-btn px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200 bg-white text-rose-700 shadow-sm";
             document.getElementById('section-upload').classList.add('hidden');
             document.getElementById('section-scanner').classList.add('hidden');
             document.getElementById('section-reports').classList.add('hidden');
             document.getElementById(`section-${tabId}`).classList.remove('hidden');
-
-            if (tabId === 'scanner') startScanning();
-            else stopScanning();
+            if (tabId === 'scanner') startScanning(); else stopScanning();
         };
 
-        window.handleFileSelect = handleFileSelect;
-        window.clearAllOrders = clearAllOrders;
-        window.toggleTorch = toggleTorch;
-        window.restartScannerWithSelectedCamera = restartScannerWithSelectedCamera;
-        window.startScanning = startScanning;
-        window.stopScanning = stopScanning;
-        window.resumeScanningAfterError = resumeScanningAfterError;
-        window.simulateScanAction = simulateScanAction;
-        window.generatePDFReport = generatePDFReport;
-        window.saveWorkerName = saveWorkerName;
-
-        // تصفية سريعة داخل الجدول
-        window.filterTable = () => {
-            const val = document.getElementById('search-input').value.toLowerCase();
-            const rows = document.querySelectorAll('#orders-table-body tr');
-            rows.forEach(row => {
-                row.style.display = row.textContent.toLowerCase().includes(val) ? '' : 'none';
-            });
-        };
-
-        // =========================================================================
-        // 🔌 محرك مراقبة المدخلات للإسكانر الخارجي + درع حظر تداخل F12 الفوري 🔌
-        // =========================================================================
         let scannerBuffer = "";
         let lastKeyTime = Date.now();
+        let processTimeout = null;
+        let audioCtx = null;
+        function initAudioContext() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
 
-        // مستمع أحداث صارم بميزة Capture لاعتراض زرار F12 وحجبه فوراً قبل تحرك المتصفح
         document.addEventListener('keydown', function(e) {
-            // حظر مفتاح F12 وحذفه في جزء من الملي ثانية لمنع فتح أو قفل القائمة السوداء نهائياً
-            if (e.key === 'F12' || e.keyCode === 123) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
+            if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); e.stopPropagation(); return false; }
+            if (e.key === 'Control' || e.key === 'Shift' || e.key === 'Alt' || e.key === 'Meta') return;
 
-            // تجنب تداخل الكتابة اليدوية داخل خانات النصوص مع قراءة الإسكانر
             const activeEl = document.activeElement;
-            const isInputField = activeEl && (
-                activeEl.tagName === 'INPUT' || 
-                activeEl.tagName === 'TEXTAREA' || 
-                activeEl.isContentEditable
-            );
-            
-            // استثناء: إذا كان العامل يكتب في خانة البحث السريع للجدول أو اسم الموظف، لا نقوم بالمقاطعة
-            if (isInputField && activeEl.id !== 'sim-input') {
-                return;
-            }
+            const isInputField = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
+            if (isInputField && activeEl.id !== 'sim-input') return;
 
             const currentTime = Date.now();
-            
-            // تصفير الذاكرة التجميعية إذا كانت الكتابة بطيئة (يدوية) وليست من الإسكانر
-            if (currentTime - lastKeyTime > 100) {
-                scannerBuffer = ""; 
-            }
+            if (currentTime - lastKeyTime > 80) scannerBuffer = ""; 
             lastKeyTime = currentTime;
 
-            // تجميع الحروف الصالحة
-            if (e.key.length === 1) {
-                scannerBuffer += e.key;
-            }
+            if (e.key.length === 1) scannerBuffer += e.key;
 
-            // بمجرد ضغط الإسكانر على Enter تلقائياً عند قراءة الكرتونة
             if (e.key === 'Enter') {
+                e.preventDefault();
                 const barcode = scannerBuffer.trim();
                 if (barcode.length > 2) {
-                    processBarcode(barcode);
+                    if (processTimeout) clearTimeout(processTimeout);
+                    processTimeout = setTimeout(() => { processBarcode(barcode); }, 50);
                 }
-                scannerBuffer = ""; // تصفير فوري
+                scannerBuffer = ""; 
             }
-        }, true); // تفعيل الـ Capture لإحباط زرار F12 فوراً وبأقصى سرعة
-        // =========================================================================
+        }, true);
     </script>
 </body>
 </html>
