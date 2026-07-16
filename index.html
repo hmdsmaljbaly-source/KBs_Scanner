@@ -4,22 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Korean Beautys - نظام الشحن السحابي المتزامن</title>
-    <!-- Tailwind CSS للتصميم العصري والسريع -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- مكتبة أيقونات Lucide الرائعة بروابط مباشرة ومستقرة لمنع أخطاء CORS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.0/lucide.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- مكتبة قراءة الباركود عبر المتصفح - إصدار مثبت ومستقر -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- مكتبة SheetJS لقراءة وتحليل ملفات الـ Excel والـ CSV سحابياً -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- مكتبات توليد الـ PDF بجودة عالية ودعم كامل للعربية -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- font-awesome للرموز والأيقونات الإضافية -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <!-- خطوط جوجل - خط تجول الأنيق -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     
-    <!-- روابط مكتبات Firebase CDN المتوافقة (Compat / v9) المطلوبة للتكامل السريع مع تفعيل الـ CORS بأمان -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js" crossorigin="anonymous"></script>
 
@@ -41,7 +33,6 @@
 </head>
 <body class="min-h-screen flex flex-col text-slate-800">
 
-    <!-- شريط التنقل العلوي والمؤشرات السحابية (Premium Branding & Cloud Status) -->
     <header class="bg-gradient-to-r from-rose-700 via-rose-600 to-amber-600 text-white shadow-md sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div class="flex items-center gap-3">
@@ -56,7 +47,6 @@
                     </div>
                 </div>
             </div>
-            <!-- تبويبات التنقل الرئيسية -->
             <nav class="flex items-center gap-1 bg-black/10 p-1 rounded-xl backdrop-blur-sm w-full sm:w-auto overflow-x-auto">
                 <button onclick="switchTab('upload')" id="tab-upload" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200 bg-white text-rose-700 shadow-sm">
                     <i data-lucide="upload-cloud" class="w-4 h-4"></i> الرفع واللوحة
@@ -71,7 +61,6 @@
         </div>
     </header>
 
-    <!-- شريط معلومات الموظف النشط سحابياً (User Identity Banner) -->
     <div class="bg-slate-100 border-b border-slate-200 px-4 py-2">
         <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center text-xs gap-3">
             <span class="text-slate-600 flex items-center gap-2 font-medium">
@@ -83,17 +72,14 @@
             </span>
             <span class="text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                قناة التحديث اللحظي السريع نشطة
+                قناة التحديث اللحظي السريع نشطة (تدعم الإسكانر الخارجي 🔌)
             </span>
         </div>
     </div>
 
-    <!-- محتوى التطبيق الرئيسي -->
     <main class="flex-grow max-w-6xl w-full mx-auto p-4">
 
-        <!-- ================= تبويب الرفع واللوحة ================= -->
         <section id="section-upload" class="space-y-6">
-            <!-- كروت العدادات اللحظية (Summary Cards) -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
                     <div>
@@ -125,7 +111,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- شاشة الرفع والتهيئة السحابية -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-1 flex flex-col justify-between space-y-4">
                     <div>
                         <h2 class="text-lg font-extrabold text-slate-800 flex items-center gap-2 mb-3">
@@ -135,7 +120,6 @@
                             قم برفع شيت اليوم بصيغة **Excel (.xlsx, .xls)** أو **CSV**. سيقوم النظام السحابي بالتعرف التلقائي على الأعمدة ومشاركتها مع جميع العمال فوراً.
                         </p>
 
-                        <!-- منطقة الرفع بالتفاعل السحب والإفلات -->
                         <div id="drop-zone" class="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:border-rose-500 transition-colors cursor-pointer bg-slate-50 relative">
                             <input type="file" id="csv-file" accept=".csv, .xlsx, .xls, .txt" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="handleFileSelect(event)">
                             <div class="space-y-2">
@@ -149,7 +133,6 @@
                     </div>
 
                     <div class="pt-4 border-t border-slate-100 space-y-2">
-                        <!-- تصفير السحابة الحالية لبدء يوم جديد -->
                         <button onclick="clearAllOrders()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 transition-all duration-150">
                             <i data-lucide="rotate-ccw" class="w-4 h-4 text-rose-400"></i> تصفير ومسح السحابة لليوم الجديد
                         </button>
@@ -157,7 +140,6 @@
                     </div>
                 </div>
 
-                <!-- جدول عرض وتفتيش أوردرات اليوم اللحظي -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-2">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                         <div>
@@ -166,7 +148,6 @@
                             </h2>
                             <p class="text-slate-400 text-xs mt-0.5">تحديث فوري لجميع الأوردرات المقروءة والمعلقة من جميع الهواتف</p>
                         </div>
-                        <!-- خانة البحث السريع داخل الجدول -->
                         <div class="relative w-full sm:w-64">
                             <input type="text" id="search-input" oninput="filterTable()" placeholder="ابحث برقم الأوردر أو التتبع..." class="w-full pl-3 pr-10 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
                             <i data-lucide="search" class="absolute left-auto right-3 top-2.5 w-4 h-4 text-slate-400"></i>
@@ -200,11 +181,9 @@
             </div>
         </section>
 
-        <!-- ================= تبويب محطة الموبايل والكاميرا ================= -->
         <section id="section-scanner" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                <!-- عمود كاميرا الموبايل المستمرة -->
                 <div class="lg:col-span-2 space-y-4">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden">
                         
@@ -216,31 +195,25 @@
                                 <p class="text-slate-400 text-xs">سجل عملياتك مع زملائك في المستودع بالتوازي</p>
                             </div>
                             <div class="flex gap-2">
-                                <!-- زر تفعيل الفلاش -->
                                 <button onclick="toggleTorch()" id="torch-btn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 p-2.5 rounded-xl transition-all duration-150 relative group" title="تشغيل الكشاف">
                                     <i data-lucide="flashlight" class="w-5 h-5"></i>
                                 </button>
-                                <!-- اختيار الكاميرا المناسبة -->
                                 <select id="camera-select" onchange="restartScannerWithSelectedCamera()" class="border border-slate-200 rounded-xl px-3 py-1.5 text-xs bg-slate-50 focus:outline-none">
                                     <option value="">جاري الكشف عن الكاميرات...</option>
                                 </select>
                             </div>
                         </div>
 
-                        <!-- صندوق قارئ الكاميرا الفعلي محاط بإطار أنيق وتفاعلي للسيناريوهات -->
                         <div class="relative w-full aspect-video md:aspect-[4/3] rounded-2xl bg-black overflow-hidden border border-slate-200 shadow-inner">
                             
-                            <!-- عنصر الفيديو الخاص بقارئ الباركود -->
                             <div id="reader" class="w-full h-full"></div>
 
-                            <!-- الإطار الشفاف الافتراضي (Scanner Target) -->
                             <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
                                 <div class="w-64 h-40 border-2 border-dashed border-white/50 rounded-xl flex items-center justify-center bg-black/20 backdrop-blur-[0.5px]">
                                     <div class="text-[11px] text-white/80 bg-black/60 px-2 py-1 rounded">ضع الباركود هنا</div>
                                 </div>
                             </div>
 
-                            <!-- عداد الإسكان العائم باللون الأخضر أسفل الفيديو -->
                             <div class="absolute bottom-4 right-4 left-4 flex justify-between items-center bg-black/70 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10 pointer-events-none">
                                 <div class="flex items-center gap-2">
                                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse animate-duration-1000"></span>
@@ -251,7 +224,6 @@
                                 </div>
                             </div>
 
-                            <!-- 🟢 واجهة الإسكان الناجح (Success Overlay) -->
                             <div id="overlay-success" class="absolute inset-0 bg-emerald-600/90 text-white flex flex-col items-center justify-center gap-2 opacity-0 pointer-events-none transition-all duration-150 z-20">
                                 <div class="bg-white text-emerald-600 p-4 rounded-full shadow-lg animate-bounce animate-duration-500">
                                     <i data-lucide="check" class="w-12 h-12"></i>
@@ -260,7 +232,6 @@
                                 <p id="overlay-success-id" class="text-sm font-mono text-emerald-100">Order ID: -</p>
                             </div>
 
-                            <!-- 🟡 واجهة الأوردر المكرر (Duplicate Overlay) -->
                             <div id="overlay-duplicate" class="absolute inset-0 bg-amber-500/95 text-white flex flex-col items-center justify-center gap-2 opacity-0 pointer-events-none transition-all duration-150 z-20">
                                 <div class="bg-white text-amber-500 p-4 rounded-full shadow-lg">
                                     <i data-lucide="alert-triangle" class="w-12 h-12"></i>
@@ -269,7 +240,6 @@
                                 <p id="overlay-duplicate-id" class="text-sm font-mono text-amber-500 bg-white/95 px-3 py-1 rounded-lg font-bold">تم إسكانه بالفعل</p>
                             </div>
 
-                            <!-- 🔴 واجهة الأوردر الخاطئ (Error Block Overlay) -->
                             <div id="overlay-error" class="absolute inset-0 bg-rose-600 text-white flex flex-col items-center justify-center p-6 gap-4 opacity-0 pointer-events-none transition-all duration-150 z-20">
                                 <div class="bg-white text-rose-600 p-4 rounded-full shadow-lg animate-pulse animate-duration-1000">
                                     <i data-lucide="x" class="w-12 h-12"></i>
@@ -278,7 +248,6 @@
                                     <h4 class="text-2xl font-extrabold tracking-wide">خطأ! غير مسجل بالسحابة</h4>
                                     <p class="text-sm text-rose-100">هذا الطرد لا ينتمي لقاعدة البيانات المرفوعة اليوم!</p>
                                 </div>
-                                <!-- زر إجباري لمتابعة الإسكان وإلغاء القفل للأمان -->
                                 <button onclick="resumeScanningAfterError()" class="bg-white hover:bg-slate-50 text-rose-700 font-extrabold py-3.5 px-8 rounded-xl shadow-md text-base transition-all active:scale-95 flex items-center gap-2">
                                     <i data-lucide="play" class="w-5 h-5"></i> متابعة الإسكان
                                 </button>
@@ -287,7 +256,7 @@
                         </div>
 
                         <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mt-4 text-xs text-slate-500">
-                            <span class="flex items-center gap-1"><i data-lucide="info" class="w-4 h-4 text-rose-600"></i> الرجاء منح صلاحية الكاميرا للمتصفح عند الطلب.</span>
+                            <span class="flex items-center gap-1"><i data-lucide="info" class="w-4 h-4 text-rose-600"></i> الرجاء منح صلاحية الكاميرا للمتصفح عند الطلب (أو استخدم الإسكانر الخارجي مباشرة).</span>
                             <div class="flex gap-2">
                                 <button onclick="startScanning()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-3 rounded-lg flex items-center gap-1 transition-all"><i data-lucide="play" class="w-3.5 h-3.5"></i> تشغيل</button>
                                 <button onclick="stopScanning()" class="bg-slate-500 hover:bg-slate-600 text-white font-bold py-1.5 px-3 rounded-lg flex items-center gap-1 transition-all"><i data-lucide="square" class="w-3.5 h-3.5"></i> إيقاف</button>
@@ -297,7 +266,6 @@
                     </div>
                 </div>
 
-                <!-- عمود فحص ومحاكاة الباركود (مثالي لتجربة فورية بدون طباعة باركودات) -->
                 <div class="lg:col-span-1 space-y-4">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-full">
                         <div>
@@ -316,7 +284,6 @@
                                     </ul>
                                 </div>
 
-                                <!-- حقل إدخال المحاكاة اليدوية -->
                                 <div class="space-y-1.5">
                                     <label class="text-xs font-bold text-slate-600">أدخل رقم التتبع يدوياً للمحاكاة السحابية:</label>
                                     <div class="flex gap-2">
@@ -327,7 +294,6 @@
                             </div>
                         </div>
 
-                        <!-- سجل الإسكان المباشر في الجانب -->
                         <div class="mt-4 pt-4 border-t border-slate-100">
                             <h4 class="text-xs font-bold text-slate-600 mb-2">سجل الأحداث الأخيرة للسحابة:</h4>
                             <div id="live-scan-log" class="text-[11px] font-mono text-slate-500 space-y-1 max-h-[140px] overflow-y-auto bg-slate-50 p-2 rounded-lg border border-slate-100">
@@ -341,11 +307,9 @@
             </div>
         </section>
 
-        <!-- ================= تبويب التقارير والإغلاق والـ PDF ================= -->
         <section id="section-reports" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                <!-- عمود فحص النواقص والأوردرات المتبقية -->
                 <div class="lg:col-span-1 space-y-4">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-full">
                         <div>
@@ -357,7 +321,6 @@
                             </div>
                             <p class="text-slate-400 text-xs mb-4">هذه القائمة تستعرض الطرود المتبقية التي لم يتم إسكانها من أي موظف حتى الآن</p>
                             
-                            <!-- قائمة متبقي الأوردرات المعلقة -->
                             <div id="missing-orders-list" class="space-y-1.5 max-h-[250px] overflow-y-auto">
                                 <div class="text-center text-slate-400 py-6 text-xs">لا يوجد أوردرات معلقة حالياً.</div>
                             </div>
@@ -369,7 +332,6 @@
                     </div>
                 </div>
 
-                <!-- عمود بيانات الـ Manifest والتقرير لتوليد الـ PDF -->
                 <div class="lg:col-span-2 space-y-4">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
                         
@@ -407,7 +369,6 @@
                             </div>
                         </div>
 
-                        <!-- كبس الزر الرئيسي لتوليد ملف الـ PDF -->
                         <button onclick="generatePDFReport()" class="w-full bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-700 hover:to-amber-700 text-white font-extrabold py-4 px-6 rounded-2xl text-base flex items-center justify-center gap-2.5 shadow-md shadow-rose-100 transition-all active:scale-98">
                             <i data-lucide="file-check-2" class="w-5 h-5"></i> تحميل تقرير ومستند التسليم النهائي (PDF)
                         </button>
@@ -420,19 +381,15 @@
 
     </main>
 
-    <!-- تذييل الصفحة الأنيق لبراند كوريان بيوتيز -->
     <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400">
         <div>جميع الحقوق محفوظة © <span class="font-extrabold tracking-wider text-rose-600">KOREAN BEAUTYS</span> ٢٠٢٦</div>
     </footer>
 
-    <!-- ================= الـ PDF المصمم للطباعة الفائقة (مخفي برمجياً ويستخدم للتوليد) ================= -->
     <div id="pdf-template-wrapper" class="hidden">
         <div id="pdf-document" class="p-8 bg-white text-slate-800 w-[794px] min-h-[1123px] text-right text-xs leading-normal relative space-y-8" style="direction: rtl;">
             
-            <!-- 📄 الصفحة الأولى: تقرير الحالة الداخلي لـ Korean Beautys -->
             <div class="pdf-page relative min-h-[1050px] flex flex-col justify-between">
                 <div>
-                    <!-- ترويسة الصفحة الأولى الفاخرة -->
                     <div class="flex justify-between items-center border-b-2 border-rose-600 pb-4">
                         <div>
                             <h1 class="text-2xl font-black text-rose-700 tracking-wide">KOREAN BEAUTYS</h1>
@@ -444,7 +401,6 @@
                         </div>
                     </div>
 
-                    <!-- الملخص العددي للوردية -->
                     <div class="grid grid-cols-3 gap-4 my-6 text-center">
                         <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
                             <span class="text-slate-500 block text-[9px] font-bold">إجمالي طرود الوردية</span>
@@ -460,7 +416,6 @@
                         </div>
                     </div>
 
-                    <!-- جدول جرد التفاصيل بالكامل لكافة أوردرات اليوم -->
                     <div>
                         <h3 class="text-xs font-black text-slate-700 mb-2 flex items-center gap-1">📋 جرد وتصنيف كافة الأوردرات (جرد داخلي)</h3>
                         <table class="w-full text-right border-collapse text-[10px]">
@@ -475,26 +430,21 @@
                                 </tr>
                             </thead>
                             <tbody id="pdf-full-table-body" class="divide-y divide-slate-100">
-                                <!-- تملأ برمجياً بقائمة الأوردرات بالكامل -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- تذييل الصفحة الأولى -->
                 <div class="border-t border-slate-100 pt-3 text-[9px] text-slate-400 text-center flex justify-between">
                     <span>Korean Beautys Logistics System</span>
                     <span>الصفحة 1 من 2</span>
                 </div>
             </div>
 
-            <!-- فاصل صفحات إجباري لـ html2pdf -->
             <div class="html2pdf__page-break"></div>
 
-            <!-- 📄 الصفحة الثانية: إيصال تسليم المندوب الرسمي (The Delivery Manifest) -->
             <div class="pdf-page relative min-h-[1050px] flex flex-col justify-between">
                 <div>
-                    <!-- ترويسة الصفحة الثانية -->
                     <div class="flex justify-between items-center border-b-2 border-rose-600 pb-4">
                         <div>
                             <h1 class="text-2xl font-black text-rose-700 tracking-wide">KOREAN BEAUTYS</h1>
@@ -506,7 +456,6 @@
                         </div>
                     </div>
 
-                    <!-- صيغة الإقرار القانوني الرسمي والذكي -->
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 my-5 text-[11px] leading-relaxed text-slate-700">
                         نقر نحن إدارة شحن ومستودعات <strong class="text-rose-700 font-extrabold">Korean Beautys</strong> بأنه في يوم 
                         <span id="pdf-manifest-day-text" class="font-bold underline">الأحد</span> الموافق 
@@ -514,14 +463,12 @@
                         (<span id="pdf-manifest-count-num" class="font-bold text-rose-600">215</span>) طرداً فقط لا غير، وبناءً عليه جرى توقيع هذا الإيصال الرسمي للاعتماد المتبادل.
                     </div>
 
-                    <!-- تفاصيل المندوب المستلم -->
                     <div class="grid grid-cols-3 gap-4 mb-5 p-3 rounded-lg border border-slate-100 text-[10px] bg-white">
                         <p><strong>المندوب المستلم:</strong> <span id="pdf-manifest-courier-name">-</span></p>
                         <p><strong>رقم الهوية:</strong> <span id="pdf-manifest-courier-id">-</span></p>
                         <p><strong>رقم لوحة المركبة:</strong> <span id="pdf-manifest-car-plate">-</span></p>
                     </div>
 
-                    <!-- جدول الأوردرات المفلترة (المشحونة والمسلمة فعلياً فقط) -->
                     <div>
                         <h3 class="text-xs font-black text-emerald-700 mb-2 flex items-center gap-1">🚚 الطرود المسلمة والمدرجة تحت مسؤولية الناقل</h3>
                         <table class="w-full text-right border-collapse text-[10px]">
@@ -536,13 +483,11 @@
                                 </tr>
                             </thead>
                             <tbody id="pdf-filtered-table-body" class="divide-y divide-slate-100">
-                                <!-- تملأ برمجياً بالأوردرات المشحونة فقط -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- قسم التوقيعات الثنائي المحمي منسق أسفل الصفحة -->
                 <div>
                     <div class="grid grid-cols-2 gap-8 pt-8 pb-4 border-t border-slate-200 mt-6">
                         <div class="space-y-12">
@@ -565,7 +510,6 @@
                         </div>
                     </div>
 
-                    <!-- تذييل الصفحة الثانية -->
                     <div class="border-t border-slate-100 pt-3 text-[9px] text-slate-400 text-center flex justify-between">
                         <span>Korean Beautys Logistics System</span>
                         <span>الصفحة 2 من 2</span>
@@ -576,7 +520,6 @@
         </div>
     </div>
 
-    <!-- كود الجافا سكريبت التفاعلي لربط أجهزة عمال المخزن بالشبكة السحابية المشتركة -->
     <script>
         // --- 1. تكوين قاعدة بيانات الفايربيز للاتصال والتحقق ---
         const firebaseConfig = {
@@ -920,7 +863,7 @@
 
             // 1. تجربة البحث عن تطابقات صريحة وقوية أولاً
             const strongOrderId = ['order_id', 'order id', 'رقم الأوردر', 'رقم الاوردر', 'رقم الطلب', 'مسلسل الأوردر', 'مسلسل الاوردر', 'order_no', 'order no', 'id'];
-            const strongTracking = ['tracking_number', 'tracking number', 'tracking_no', 'tracking no', 'waybill', 'airwaybill', 'بوليصة الشحن', 'رقم الشحن', 'شركة الشحن', 'رقم التتبع', 'رقم تتبع', 'البوليصة', 'بوليصة'];
+            const strongTracking = ['tracking_number', 'tracking number', 'tracking_by', 'tracking_no', 'tracking no', 'waybill', 'airwaybill', 'بوليصة الشحن', 'رقم الشحن', 'شركة الشحن', 'رقم التتبع', 'رقم تتبع', 'البوليصة', 'بوليصة'];
 
             for (let i = 0; i < normHeaders.length; i++) {
                 const h = normHeaders[i];
@@ -1107,7 +1050,11 @@
             if (!barcode) return;
 
             // فحص وجود الباركود بذاكرة السحابة المحلية
-            const orderIndex = orders.findIndex(o => o.trackingNumber === barcode);
+            // ندعم البحث بـ Tracking_Number أو بـ Order_ID لمرونة تامة
+            const orderIndex = orders.findIndex(o => 
+                o.trackingNumber.toLowerCase() === barcode.toLowerCase() || 
+                o.orderId.toLowerCase() === barcode.toLowerCase()
+            );
 
             if (orderIndex !== -1) {
                 const targetOrder = orders[orderIndex];
@@ -1476,6 +1423,50 @@
                 row.style.display = row.textContent.toLowerCase().includes(val) ? '' : 'none';
             });
         };
+
+        // =========================================================================
+        // 🔌 إضافة محرك مراقبة المدخلات للإسكانر الخارجي (USB / اللاسلكي) 🔌
+        // =========================================================================
+        let scannerBuffer = "";
+        let lastKeyTime = Date.now();
+
+        document.addEventListener('keydown', function(e) {
+            // تجنب تداخل الكتابة اليدوية داخل خانات النصوص مع قراءة الإسكانر
+            const activeEl = document.activeElement;
+            const isInputField = activeEl && (
+                activeEl.tagName === 'INPUT' || 
+                activeEl.tagName === 'TEXTAREA' || 
+                activeEl.isContentEditable
+            );
+            
+            // استثناء: إذا كان العامل يكتب في خانة البحث السريع للجدول أو اسم الموظف، لا نقوم بالمقاطعة
+            if (isInputField && activeEl.id !== 'sim-input') {
+                return;
+            }
+
+            const currentTime = Date.now();
+            
+            // إذا كانت المدة الزمنية بين الضغطة والسابقة أكثر من 100 مللي ثانية، فهذه كتابة يدوية وليست إسكانر
+            if (currentTime - lastKeyTime > 100) {
+                scannerBuffer = ""; 
+            }
+            lastKeyTime = currentTime;
+
+            // تجميع الحروف الصالحة
+            if (e.key.length === 1) {
+                scannerBuffer += e.key;
+            }
+
+            // بمجرد ضغط الإسكانر على Enter تلقائياً عند قراءة الكرتونة
+            if (e.key === 'Enter') {
+                const barcode = scannerBuffer.trim();
+                if (barcode.length > 2) {
+                    processBarcode(barcode);
+                }
+                scannerBuffer = ""; // تصفير الذاكرة لاستقبال الأوردر التالي
+            }
+        });
+        // =========================================================================
     </script>
 </body>
 </html>
